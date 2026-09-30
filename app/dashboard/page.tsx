@@ -421,6 +421,21 @@ export default function DashboardPage() {
           )}
         </section>
 
+        <section className={`rounded-2xl border p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 ${darkMode ? "border-slate-800 bg-slate-900/60" : "border-slate-200 bg-white"}`}>
+          <div className="min-w-0">
+            <h2 className={`text-base font-semibold ${darkMode ? "text-slate-100" : "text-slate-800"}`}>📩 Contacto y reclamos</h2>
+            <p className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-500"}`}>
+              ¿Tenés una consulta, problema o reclamo? Escribinos y te respondemos a la brevedad.
+            </p>
+          </div>
+          <a
+            href="mailto:techprosoftware3@gmail.com?subject=Contacto%20%2F%20Reclamo"
+            className="w-full sm:w-auto shrink-0 text-center bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-xl text-sm font-medium transition-all break-all"
+          >
+            techprosoftware3@gmail.com
+          </a>
+        </section>
+
         {/* Pie de página con enlaces legales */}
         <footer className={`pt-8 pb-4 border-t ${darkMode ? "border-slate-800/80 text-slate-500" : "border-slate-200/80 text-slate-400"} text-center text-xs flex flex-wrap justify-center gap-x-6 gap-y-2`}>
           <span>© 2026 OS IA - Todos los derechos reservados</span>
