@@ -71,6 +71,28 @@ async function activateFromPreApproval(preApprovalId: string, expectedUserId?: s
   return true;
 }
 
+// Busca una suscripción autorizada del usuario cuando no tenemos el preapproval_id
+async function activateFromUserSearch(userId: string, email?: string) {
+  const searches = [
+    new URLSearchParams({ status: 'authorized', limit: '100', ...(email ? { payer_email: email } : {}) }),
+    new URLSearchParams({ status: 'authorized', limit: '100' }),
+  ];
+
+  for (const params of searches) {
+    const result = await fetchMercadoPago<{ results?: MercadoPagoPreApproval[] }>(
+      `/preapproval/search?${params}`
+    );
+    const match = result?.results?.find(
+      (p) => p.external_reference === userId && p.status === 'authorized'
+    );
+    if (match) {
+      await activateSubscription(userId, subscriptionEndDate(match));
+      return true;
+    }
+  }
+  return false;
+}
+
 // Mercado Pago notifica aquí los eventos de suscripciones y pagos
 export async function POST(req: Request) {
   try {
@@ -113,13 +135,10 @@ export async function POST(req: Request) {
   }
 }
 
-// Verificación al volver de Mercado Pago (back_url con ?preapproval_id=...)
+// Verifica y activa la suscripción del usuario logueado (opcionalmente con ?preapproval_id=...)
 export async function GET(req: Request) {
   try {
     const preApprovalId = new URL(req.url).searchParams.get('preapproval_id');
-    if (!preApprovalId) {
-      return NextResponse.json({ error: 'Falta preapproval_id' }, { status: 400 });
-    }
 
     const supabase = await createServerSupabaseClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -127,7 +146,9 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
     }
 
-    const active = await activateFromPreApproval(preApprovalId, user.id);
+    const active = preApprovalId
+      ? await activateFromPreApproval(preApprovalId, user.id)
+      : await activateFromUserSearch(user.id, user.email);
     return NextResponse.json({ active });
   } catch (error) {
     console.error("Error verificando la suscripción:", error);
