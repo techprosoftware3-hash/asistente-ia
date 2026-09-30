@@ -107,11 +107,11 @@ export default function TasksPage() {
   if (!mounted) return null;
 
   return (
-    <main className={`min-h-screen transition-colors duration-200 ${darkMode ? "bg-slate-950 text-slate-100" : "bg-gray-50 text-gray-900"} px-6 py-12`}>
+    <main className={`min-h-screen transition-colors duration-200 ${darkMode ? "bg-slate-950 text-slate-100" : "bg-gray-50 text-gray-900"} px-4 sm:px-6 py-6 sm:py-12`}>
       <div className="mx-auto max-w-6xl space-y-8">
         
         {/* Cabecera con botón de modo nocturno */}
-        <div className="flex justify-between items-start">
+        <div className="flex justify-between items-start gap-3">
           <div>
             <a
               href="/dashboard"
@@ -119,7 +119,7 @@ export default function TasksPage() {
             >
               ← Volver al dashboard
             </a>
-            <h1 className={`mt-4 text-3xl font-bold tracking-tight ${darkMode ? "text-white" : "text-gray-900"}`}>
+            <h1 className={`mt-4 text-2xl sm:text-3xl font-bold tracking-tight ${darkMode ? "text-white" : "text-gray-900"}`}>
               Control de Tareas y Automatizaciones
             </h1>
             <p className={`mt-1 text-sm ${darkMode ? "text-slate-400" : "text-gray-500"}`}>
@@ -169,7 +169,7 @@ export default function TasksPage() {
 
         {/* Listado de Tareas */}
         <div className={`rounded-2xl border ${darkMode ? "bg-slate-900 border-slate-800" : "bg-white border-gray-200"} shadow-sm overflow-hidden`}>
-          <div className={`p-6 border-b ${darkMode ? "border-slate-800" : "border-gray-100"}`}>
+          <div className={`p-4 sm:p-6 border-b ${darkMode ? "border-slate-800" : "border-gray-100"}`}>
             <h2 className={`text-lg font-semibold ${darkMode ? "text-white" : "text-gray-900"}`}>
               Listado general ({filteredTasks.length})
             </h2>
@@ -188,9 +188,9 @@ export default function TasksPage() {
                 const isExecuting = executingId === task.id;
 
                 return (
-                  <div key={task.id} className={`p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition ${darkMode ? "hover:bg-slate-800/50" : "hover:bg-gray-50/50"}`}>
-                    <div className="space-y-1.5 max-w-2xl">
-                      <div className="flex items-center gap-3">
+                  <div key={task.id} className={`p-4 sm:p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition ${darkMode ? "hover:bg-slate-800/50" : "hover:bg-gray-50/50"}`}>
+                    <div className="space-y-1.5 max-w-2xl min-w-0">
+                      <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                         <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-mono font-medium ${
                           task.status === "completed" 
                             ? (darkMode ? "bg-green-950 text-green-300 border border-green-900" : "bg-green-100 text-green-800") :

@@ -47,7 +47,7 @@ export default function NewEmployeePage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-gray-50 min-h-screen text-gray-800">
+    <div className="w-full max-w-3xl mx-auto p-4 sm:p-6 bg-gray-50 min-h-screen text-gray-800">
       <button 
         onClick={() => router.push("/dashboard")} 
         className="text-sm text-blue-600 hover:underline mb-4 inline-block"
@@ -55,7 +55,7 @@ export default function NewEmployeePage() {
         ← Volver al Dashboard
       </button>
 
-      <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+      <div className="bg-white p-5 sm:p-8 rounded-2xl shadow-sm border border-gray-100">
         <h1 className="text-2xl font-bold text-gray-900 mb-1">Crear Nuevo Empleado Virtual</h1>
         <p className="text-sm text-gray-500 mb-6">Configura el rol, objetivos e instrucciones base de tu nuevo agente autónomo.</p>
 

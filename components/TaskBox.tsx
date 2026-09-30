@@ -247,7 +247,7 @@ export default function TaskBox({
   }
 
   return (
-    <section className="mb-6 rounded-3xl border bg-white p-6 shadow-sm">
+    <section className="mb-6 rounded-3xl border bg-white p-4 sm:p-6 shadow-sm">
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center gap-3">
@@ -426,7 +426,7 @@ export default function TaskBox({
             {tasks.map((task) => (
               <div
                 key={task.id}
-                className="rounded-2xl border bg-white p-5"
+                className="rounded-2xl border bg-white p-4 sm:p-5"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0">

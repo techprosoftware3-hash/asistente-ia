@@ -58,7 +58,7 @@ export default function MemoryBox({
   }
 
   return (
-    <section className="mb-6 rounded-3xl border bg-white p-6">
+    <section className="mb-6 rounded-3xl border bg-white p-4 sm:p-6">
       <div className="mb-5">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-50 text-xl">

@@ -209,11 +209,11 @@ export default function FilesPage() {
   if (!mounted) return null;
 
   return (
-    <div className={`min-h-screen transition-colors duration-200 ${darkMode ? "bg-slate-950 text-slate-100" : "bg-gradient-to-br from-gray-50 via-gray-50/50 to-gray-100/50 text-gray-900"} p-8`}>
+    <div className={`min-h-screen transition-colors duration-200 ${darkMode ? "bg-slate-950 text-slate-100" : "bg-gradient-to-br from-gray-50 via-gray-50/50 to-gray-100/50 text-gray-900"} p-4 sm:p-8`}>
       <div className="max-w-5xl mx-auto space-y-6">
         
         {/* Cabecera */}
-        <div className={`flex items-center justify-between ${darkMode ? "bg-slate-900 border-slate-800" : "bg-white border-gray-200"} p-6 rounded-3xl border shadow-sm`}>
+        <div className={`flex items-start sm:items-center justify-between gap-3 ${darkMode ? "bg-slate-900 border-slate-800" : "bg-white border-gray-200"} p-4 sm:p-6 rounded-3xl border shadow-sm`}>
           <div>
             <button
               onClick={() => router.push("/dashboard")}
@@ -255,11 +255,11 @@ export default function FilesPage() {
               const displayTitle = file.title.endsWith(".pdf") ? file.title : `${file.title.replace(/\.[^/.]+$/, "")}.pdf`;
               
               return (
-                <div key={file.id} className={`${darkMode ? "bg-slate-900 border-slate-800" : "bg-white border-gray-200"} p-6 rounded-2xl border shadow-sm flex items-center justify-between gap-4`}>
-                  <div className="space-y-1">
+                <div key={file.id} className={`${darkMode ? "bg-slate-900 border-slate-800" : "bg-white border-gray-200"} p-4 sm:p-6 rounded-2xl border shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4`}>
+                  <div className="space-y-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="text-xl">📑</span>
-                      <h3 className={`font-bold ${darkMode ? "text-white" : "text-gray-900"}`}>{displayTitle}</h3>
+                      <h3 className={`font-bold break-words ${darkMode ? "text-white" : "text-gray-900"}`}>{displayTitle}</h3>
                       <span className={`text-[10px] font-semibold ${darkMode ? "bg-red-950/50 text-red-300 border border-red-900/50" : "bg-red-50 text-red-600"} px-2 py-0.5 rounded-full uppercase`}>
                         PDF Corporativo
                       </span>
