@@ -8,7 +8,7 @@ export async function POST(req: Request) {
     const { userEmail, userId, planType } = await req.json();
 
     const isYearly = planType === 'yearly';
-    const unitPrice = isYearly ? 100000 : 10000;
+    const unitPrice = isYearly ? 100000 : 1000;
     const title = isYearly ? 'Suscripción Anual - AI Employees' : 'Suscripción Mensual - AI Employees';
 
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://swoop-spiral-preseason.ngrok-free.dev';
