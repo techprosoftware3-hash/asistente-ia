@@ -78,15 +78,13 @@ export default function NewEmployeePage() {
     setLoading(true);
 
     try {
-      let endpoint = "/api/employees/generate";
-      let payload: any = { description };
+      let payload: any = { action: "generate", description };
 
       if (mode === "manual") {
-        endpoint = "/api/employees/create-manual";
-        payload = { name, role, objective, instructions };
+        payload = { action: "create-manual", name, role, objective, instructions };
       }
 
-      const response = await fetch(endpoint, {
+      const response = await fetch("/api/employees", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

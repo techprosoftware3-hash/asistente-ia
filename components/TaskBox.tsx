@@ -167,13 +167,14 @@ export default function TaskBox({
 
     try {
       const response = await fetch(
-        "/api/tasks/execute",
+        "/api/tasks",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
+            action: "execute",
             taskId,
           }),
         }

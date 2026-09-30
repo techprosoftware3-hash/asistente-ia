@@ -40,10 +40,11 @@ export default function EditEmployeeModal({ employee }: { employee: Employee }) 
         ? formData.rules.split("\n").map((r) => r.trim()).filter(Boolean)
         : [];
 
-      const response = await fetch("/api/employees/update", {
+      const response = await fetch("/api/employees", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          action: "update",
           id: employee.id,
           ...formData,
           rules: rulesArray,

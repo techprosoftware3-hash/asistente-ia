@@ -299,10 +299,10 @@ export default function EmployeeManagementPage() {
     setShareMessage(null);
 
     try {
-      const res = await fetch("/api/employees/share", {
+      const res = await fetch("/api/employees", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ employeeId, email: shareEmail }),
+        body: JSON.stringify({ action: "share", employeeId, email: shareEmail }),
       });
 
       const data = await res.json();
