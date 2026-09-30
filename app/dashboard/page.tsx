@@ -52,7 +52,18 @@ export default function DashboardPage() {
         const isTrialActive = now < trialEndsAt;
         const isSubActive = profile.subscription_status === "active" && subEndDate && now < subEndDate;
 
-        setIsSubscriptionActive(Boolean(isTrialActive || isSubActive));
+        const active = Boolean(isTrialActive || isSubActive);
+        setIsSubscriptionActive(active);
+
+        if (!active) {
+          const verification = await fetch("/api/payment/webhook")
+            .then((res) => (res.ok ? res.json() : null))
+            .catch(() => null);
+          if (verification?.active) {
+            setIsSubscriptionActive(true);
+            router.refresh();
+          }
+        }
         
         if (profile.company_name) {
           setCompanyName(profile.company_name);

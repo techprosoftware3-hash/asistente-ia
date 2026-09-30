@@ -26,6 +26,8 @@ export default function UpgradePage() {
       setUserEmail(user.email || "");
       setUserId(user.id);
 
+      await fetch("/api/payment/webhook").catch(() => null);
+
       // Consultar el perfil del usuario para verificar su estado y fechas
       const { data: profile } = await supabase
         .from("profiles")
