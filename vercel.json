@@ -1,8 +1,8 @@
 {
   "crons": [
     {
-      "path": "/api/cron/automation",
-      "schedule": "* * * * *"
+      "path": "/api/cron/tasks",
+      "schedule": "0 0 * * *"
     }
   ]
 }
