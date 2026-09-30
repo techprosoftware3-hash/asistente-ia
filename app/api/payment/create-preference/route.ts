@@ -11,7 +11,7 @@ export async function POST(req: Request) {
     const unitPrice = isYearly ? 100000 : 1000;
     const title = isYearly ? 'Suscripción Anual - AI Employees' : 'Suscripción Mensual - AI Employees';
 
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://swoop-spiral-preseason.ngrok-free.dev';
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || new URL(req.url).origin;
     const backUrl = `${baseUrl}/dashboard?payment=success`;
 
     const preApproval = new PreApproval(client);
