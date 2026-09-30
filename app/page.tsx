@@ -1,69 +1,112 @@
-import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
+    <main className="h-screen flex flex-col justify-center overflow-hidden relative">
+      
+      {/* Luces ambientales difusas de fondo */}
+      <div className="absolute top-0 right-0 -z-10 w-[500px] h-[500px] bg-gradient-to-br from-indigo-100/50 via-purple-100/30 to-transparent rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 -z-10 w-[500px] h-[500px] bg-gradient-to-tr from-emerald-100/40 via-blue-50/20 to-transparent rounded-full blur-3xl pointer-events-none"></div>
+
+      <section className="mx-auto flex max-w-[92rem] flex-col justify-center px-8 sm:px-12 py-4 w-full relative z-10">
+
+        {/* Primera sección dividida en 2 columnas con mayor ancho */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          
+          {/* Columna de Texto */}
+          <div className="lg:col-span-7 space-y-5">
+            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3.5 py-1.5 text-xs font-medium text-emerald-800 shadow-2xs">
+              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              AI Asistente de Trabajo
+            </div>
+
+            <h1 className="text-4xl font-bold tracking-tight sm:text-6xl text-slate-900 leading-tight">
+              Creá tu propio
+              <br />
+              <span className="bg-gradient-to-r from-slate-900 via-slate-800 to-indigo-950 bg-clip-text text-transparent">
+                asistente de trabajo de IA.
+              </span>
+            </h1>
+
+            <p className="max-w-2xl text-lg sm:text-xl leading-relaxed text-slate-600">
+              Decile qué trabajo querés que haga.
+              Nuestra plataforma construye un empleado
+              digital preparado para ayudarte.
+            </p>
+
+            <div className="flex gap-4 pt-2">
+              {/* Botón principal sólido con resplandor elegante */}
+              <Link
+                href="/login"
+                className="relative inline-flex items-center justify-center rounded-2xl bg-black px-7 py-4 font-medium text-white transition-all duration-300 hover:scale-105 shadow-[0_0_20px_rgba(0,0,0,0.2)] hover:shadow-[0_0_30px_rgba(0,0,0,0.4)] text-base"
+              >
+                <span className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-emerald-500/30 to-blue-500/30 blur-sm opacity-75 animate-pulse -z-10"></span>
+                Crear mi asistente de trabajo
+              </Link>
+
+              <Link
+                href="/dashboard"
+                className="rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-xs px-7 py-4 font-medium transition-all duration-300 hover:bg-slate-50 hover:scale-105 text-slate-800 text-base flex items-center shadow-2xs"
+              >
+                Ver dashboard
+              </Link>
+            </div>
+          </div>
+
+          {/* Columna de Imagen completamente integrada sin recuadros */}
+          <div className="lg:col-span-5 flex justify-center overflow-hidden relative">
+            <div 
+              className="w-full h-[340px] sm:h-[400px] bg-cover bg-center animate-zoom-pulse"
+              style={{
+                backgroundImage: `url('https://plus.unsplash.com/premium_photo-1676637656166-cb7b3a43b81a?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')`,
+                WebkitMaskImage: 'radial-gradient(circle, black 30%, transparent 70%)',
+                maskImage: 'radial-gradient(circle, black 30%, transparent 70%)',
+                mixBlendMode: 'multiply'
+              }}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          </div>
+
         </div>
-      </main>
-    </div>
+
+        {/* Tarjetas inferiores distribuidas en todo el ancho */}
+        <div className="mt-10 grid gap-6 md:grid-cols-3">
+
+          <div className="rounded-3xl border border-slate-200/80 p-5 bg-white/90 backdrop-blur-xs shadow-2xs hover:shadow-md transition">
+            <div className="text-2xl p-2.5 bg-slate-50 w-fit rounded-2xl border border-slate-100">🧠</div>
+            <h2 className="mt-3 text-lg font-semibold text-slate-900">
+              Inteligente
+            </h2>
+            <p className="mt-1 text-slate-600 text-sm leading-relaxed">
+              Definí el trabajo y la IA crea
+              las instrucciones del empleado.
+            </p>
+          </div>
+
+          <div className="rounded-3xl border border-slate-200/80 p-5 bg-white/90 backdrop-blur-xs shadow-2xs hover:shadow-md transition">
+            <div className="text-2xl p-2.5 bg-slate-50 w-fit rounded-2xl border border-slate-100">⚙️</div>
+            <h2 className="mt-3 text-lg font-semibold text-slate-900">
+              Personalizable
+            </h2>
+            <p className="mt-1 text-slate-600 text-sm leading-relaxed">
+              Cada asistente de trabajo tiene su propio
+              objetivo, personalidad y reglas.
+            </p>
+          </div>
+
+          <div className="rounded-3xl border border-slate-200/80 p-5 bg-white/90 backdrop-blur-xs shadow-2xs hover:shadow-md transition">
+            <div className="text-2xl p-2.5 bg-slate-50 w-fit rounded-2xl border border-slate-100">🚀</div>
+            <h2 className="mt-3 text-lg font-semibold text-slate-900">
+              Preparado para trabajar
+            </h2>
+            <p className="mt-1 text-slate-600 text-sm leading-relaxed">
+              Más adelante podrá utilizar
+              herramientas y ejecutar tareas.
+            </p>
+          </div>
+
+        </div>
+
+      </section>
+    </main>
   );
 }
