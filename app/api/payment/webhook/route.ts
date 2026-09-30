@@ -1,50 +1,107 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
+import { createClient as createServerSupabaseClient } from '@/lib/supabase/server';
 
 // Cliente de Supabase con Service Role para actualizar la base de datos sin restricciones de usuario
-const supabaseAdmin = createClient(
+const supabaseAdmin = createSupabaseClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
+type MercadoPagoPreApproval = {
+  status?: string;
+  external_reference?: string;
+  next_payment_date?: string;
+  auto_recurring?: { frequency?: number; frequency_type?: string };
+};
+
+type MercadoPagoAuthorizedPayment = {
+  preapproval_id?: string;
+  status?: string;
+  payment?: { status?: string };
+};
+
+async function fetchMercadoPago<T>(path: string): Promise<T | null> {
+  const res = await fetch(`https://api.mercadopago.com${path}`, {
+    headers: { Authorization: `Bearer ${process.env.MP_ACCESS_TOKEN}` },
+    cache: 'no-store',
+  });
+  if (!res.ok) {
+    console.error(`Mercado Pago respondió ${res.status} para ${path}`);
+    return null;
+  }
+  return res.json() as Promise<T>;
+}
+
+async function activateSubscription(userId: string, endDate: Date) {
+  const { error } = await supabaseAdmin
+    .from('profiles')
+    .update({
+      subscription_status: 'active',
+      subscription_end_date: endDate.toISOString(),
+    })
+    .eq('id', userId);
+
+  if (error) throw error;
+}
+
+function subscriptionEndDate(preApproval: MercadoPagoPreApproval) {
+  const next = preApproval.next_payment_date ? new Date(preApproval.next_payment_date) : null;
+  if (next && next.getTime() > Date.now()) return next;
+
+  const months = preApproval.auto_recurring?.frequency_type === 'months'
+    ? preApproval.auto_recurring.frequency || 1
+    : 1;
+  const end = new Date();
+  end.setMonth(end.getMonth() + months);
+  return end;
+}
+
+// Activa el plan si la suscripción está autorizada. Devuelve true si se activó.
+async function activateFromPreApproval(preApprovalId: string, expectedUserId?: string) {
+  const preApproval = await fetchMercadoPago<MercadoPagoPreApproval>(
+    `/preapproval/${encodeURIComponent(preApprovalId)}`
+  );
+  if (!preApproval || preApproval.status !== 'authorized') return false;
+
+  const userId = preApproval.external_reference;
+  if (!userId || (expectedUserId && userId !== expectedUserId)) return false;
+
+  await activateSubscription(userId, subscriptionEndDate(preApproval));
+  return true;
+}
+
+// Mercado Pago notifica aquí los eventos de suscripciones y pagos
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    const url = new URL(req.url);
+    const body = await req.json().catch(() => ({}));
 
-    // Capturamos tanto el formato clásico (IPN) como el formato moderno de Webhooks de Mercado Pago
-    const paymentId = body.data?.id || (body.type === 'payment' && body.id);
+    const type: string | undefined = body.type || body.topic || url.searchParams.get('type') || url.searchParams.get('topic') || undefined;
+    const id: string | undefined = body.data?.id?.toString() || url.searchParams.get('data.id') || url.searchParams.get('id') || undefined;
 
-    if (body.type === 'payment' || body.topic === 'payment' || paymentId) {
-      const idToFetch = paymentId || body.data?.id;
-      
-      if (!idToFetch) {
-        return NextResponse.json({ received: true });
+    if (!type || !id) {
+      return NextResponse.json({ received: true });
+    }
+
+    if (type === 'subscription_preapproval' || type === 'preapproval') {
+      await activateFromPreApproval(id);
+    } else if (type === 'subscription_authorized_payment' || type === 'authorized_payment') {
+      const authorizedPayment = await fetchMercadoPago<MercadoPagoAuthorizedPayment>(
+        `/authorized_payments/${encodeURIComponent(id)}`
+      );
+      if (authorizedPayment?.preapproval_id && authorizedPayment.payment?.status === 'approved') {
+        await activateFromPreApproval(authorizedPayment.preapproval_id);
       }
+    } else if (type === 'payment') {
+      const paymentData = await fetchMercadoPago<{ status?: string; external_reference?: string }>(
+        `/v1/payments/${encodeURIComponent(id)}`
+      );
 
-      // Consultar los detalles reales del pago directamente a la API de Mercado Pago
-      const mpRes = await fetch(`https://api.mercadopago.com/v1/payments/${idToFetch}`, {
-        headers: { Authorization: `Bearer ${process.env.MP_ACCESS_TOKEN}` }
-      });
-      const paymentData = await mpRes.json();
-
-      // Validar si el pago se completó y aprobó con éxito
-      if (paymentData.status === 'approved') {
-        const userId = paymentData.external_reference; // ID de usuario enviado previamente
-
-        if (userId) {
-          // Calcular nueva fecha de vencimiento (30 días a partir de la confirmación)
-          const newEndDate = new Date();
-          newEndDate.setDate(newEndDate.getDate() + 30);
-
-          // Actualizar el perfil del usuario en Supabase de forma segura
-          await supabaseAdmin
-            .from('profiles')
-            .update({
-              subscription_status: 'active',
-              subscription_end_date: newEndDate.toISOString()
-            })
-            .eq('id', userId);
-        }
+      if (paymentData?.status === 'approved' && paymentData.external_reference) {
+        const newEndDate = new Date();
+        newEndDate.setDate(newEndDate.getDate() + 30);
+        await activateSubscription(paymentData.external_reference, newEndDate);
       }
     }
 
@@ -53,5 +110,27 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error("Error procesando el webhook de pago:", error);
     return NextResponse.json({ error: 'Webhook error' }, { status: 500 });
+  }
+}
+
+// Verificación al volver de Mercado Pago (back_url con ?preapproval_id=...)
+export async function GET(req: Request) {
+  try {
+    const preApprovalId = new URL(req.url).searchParams.get('preapproval_id');
+    if (!preApprovalId) {
+      return NextResponse.json({ error: 'Falta preapproval_id' }, { status: 400 });
+    }
+
+    const supabase = await createServerSupabaseClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
+    }
+
+    const active = await activateFromPreApproval(preApprovalId, user.id);
+    return NextResponse.json({ active });
+  } catch (error) {
+    console.error("Error verificando la suscripción:", error);
+    return NextResponse.json({ error: 'Error verificando la suscripción' }, { status: 500 });
   }
 }

@@ -31,6 +31,12 @@ export default function DashboardPage() {
       }
       setUserEmail(user.email || "");
 
+      const preApprovalId = new URLSearchParams(window.location.search).get("preapproval_id");
+      if (preApprovalId) {
+        await fetch(`/api/payment/webhook?preapproval_id=${encodeURIComponent(preApprovalId)}`).catch(() => null);
+        router.replace("/dashboard");
+      }
+
       // 1. Verificar el estado de la suscripción y obtener datos del perfil (nombre y logo)
       const { data: profile } = await supabase
         .from("profiles")
