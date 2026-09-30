@@ -131,7 +131,7 @@ export default function UpgradePage() {
               <div className="bg-blue-50 border border-blue-200 p-4 rounded-xl text-left text-sm flex flex-col sm:flex-row gap-3 sm:justify-between sm:items-center">
                 <div>
                   <p className="font-semibold text-blue-900">Plan Mensual</p>
-                  <p className="text-blue-700">$10.000 / mes (Débito automático)</p>
+                  <p className="text-blue-700">$1.000 / mes (Débito automático)</p>
                 </div>
                 <button
                   onClick={() => handleCheckout('monthly')}
