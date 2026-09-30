@@ -113,7 +113,7 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gray-50 px-6">
+    <main className="flex min-h-screen items-center justify-center bg-gray-50 px-4 sm:px-6 py-10">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
           <Link
@@ -123,7 +123,7 @@ export default function LoginPage() {
             ← Volver
           </Link>
 
-          <h1 className="mt-6 text-4xl font-bold tracking-tight">Iniciar sesión</h1>
+          <h1 className="mt-6 text-3xl sm:text-4xl font-bold tracking-tight">Iniciar sesión</h1>
           <p className="mt-2 text-gray-500">
             Accede a tu panel de empleados digitales
           </p>
@@ -131,7 +131,7 @@ export default function LoginPage() {
 
         <form
           onSubmit={handleLogin}
-          className="rounded-3xl border bg-white p-8 shadow-sm space-y-5"
+          className="rounded-3xl border bg-white p-6 sm:p-8 shadow-sm space-y-5"
         >
           <div>
             <label className="text-sm font-medium block mb-1">Email</label>

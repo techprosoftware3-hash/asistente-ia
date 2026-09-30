@@ -188,25 +188,25 @@ export default function Chat({ employeeId }: ChatProps) {
   }
 
   return (
-    <div className="mt-8 overflow-hidden rounded-3xl border bg-white shadow-sm flex flex-col">
+    <div className="flex-1 min-h-0 overflow-hidden bg-white flex flex-col">
       {/* Cabecera fija */}
-      <div className="border-b p-6 flex justify-between items-center bg-white z-10">
-        <div>
-          <h2 className="text-xl font-bold">Hablar con el asistente </h2>
-          <p className="mt-1 text-sm text-gray-500">
+      <div className="border-b p-4 sm:p-6 flex justify-between items-center gap-3 bg-white z-10 shrink-0">
+        <div className="min-w-0">
+          <h2 className="text-lg sm:text-xl font-bold">Hablar con el asistente </h2>
+          <p className="mt-1 text-sm text-gray-500 hidden sm:block">
             Probá cómo trabaja tu asistente de IA.
           </p>
         </div>
         <button
           onClick={clearChat}
-          className="rounded-xl border border-gray-300 px-4 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-100 transition cursor-pointer"
+          className="shrink-0 rounded-xl border border-gray-300 px-3 sm:px-4 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-100 transition cursor-pointer"
         >
-          Limpiar / Nueva Conversación
+          Limpiar<span className="hidden sm:inline"> / Nueva Conversación</span>
         </button>
       </div>
 
       {/* Contenedor de mensajes con altura fija y scroll interno */}
-      <div className="h-[500px] overflow-y-auto space-y-4 p-6 bg-gray-50/50">
+      <div className="flex-1 min-h-0 overflow-y-auto space-y-4 p-3 sm:p-6 bg-gray-50/50">
         {messages.length === 0 && (
           <div className="flex h-full items-center justify-center text-center text-gray-400">
             <div>
@@ -224,7 +224,7 @@ export default function Chat({ employeeId }: ChatProps) {
             }`}
           >
             <div
-              className={`max-w-[80%] rounded-2xl px-4 py-3 whitespace-pre-wrap ${
+              className={`max-w-[88%] sm:max-w-[80%] rounded-2xl px-4 py-3 whitespace-pre-wrap break-words ${
                 message.role === "user"
                   ? "bg-black text-white"
                   : "bg-white border border-gray-200 text-gray-900 shadow-xs"
@@ -246,8 +246,8 @@ export default function Chat({ employeeId }: ChatProps) {
       </div>
 
       {/* Input de envío fijo abajo */}
-      <div className="border-t p-4 bg-white">
-        <div className="flex gap-3 items-center">
+      <div className="border-t p-3 sm:p-4 bg-white shrink-0">
+        <div className="flex gap-2 sm:gap-3 items-center">
           {/* Botón para adjuntar PDFs o Imágenes */}
           <label className={`cursor-pointer p-2.5 rounded-2xl border border-gray-300 hover:bg-gray-100 transition flex items-center justify-center text-gray-600 ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`} title="Adjuntar PDF o Foto">
             📎
@@ -272,13 +272,13 @@ export default function Chat({ employeeId }: ChatProps) {
               }
             }}
             placeholder="Escribile a tu empleado..."
-            className="flex-1 rounded-2xl border border-gray-300 px-4 py-3 outline-none focus:border-black"
+            className="flex-1 min-w-0 rounded-2xl border border-gray-300 px-3 sm:px-4 py-3 outline-none focus:border-black"
           />
 
           <button
             onClick={sendMessage}
             disabled={loading || uploading || !input.trim()}
-            className="rounded-2xl bg-black px-6 py-3 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
+            className="shrink-0 rounded-2xl bg-black px-4 sm:px-6 py-3 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
           >
             Enviar
           </button>

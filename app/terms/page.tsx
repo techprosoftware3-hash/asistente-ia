@@ -10,7 +10,7 @@ export default function TermsPage() {
   if (!mounted) return null;
 
   return (
-    <div className={`min-h-screen transition-colors duration-200 ${darkMode ? "bg-slate-950 text-slate-100" : "bg-gray-50 text-gray-900"} p-6 md:p-12`}>
+    <div className={`min-h-screen transition-colors duration-200 ${darkMode ? "bg-slate-950 text-slate-100" : "bg-gray-50 text-gray-900"} p-4 sm:p-6 md:p-12`}>
       <div className="max-w-3xl mx-auto space-y-8">
         
         {/* Cabecera con botón de retorno y modo nocturno */}
@@ -36,9 +36,9 @@ export default function TermsPage() {
           </button>
         </div>
 
-        <div className={`${darkMode ? "bg-slate-900 border-slate-800" : "bg-white border-gray-200"} p-8 md:p-10 rounded-3xl border shadow-sm space-y-6 transition-colors`}>
+        <div className={`${darkMode ? "bg-slate-900 border-slate-800" : "bg-white border-gray-200"} p-5 sm:p-8 md:p-10 rounded-3xl border shadow-sm space-y-6 transition-colors`}>
           <div>
-            <h1 className={`text-3xl font-bold tracking-tight ${darkMode ? "text-white" : "text-gray-900"}`}>Términos y Condiciones</h1>
+            <h1 className={`text-2xl sm:text-3xl font-bold tracking-tight ${darkMode ? "text-white" : "text-gray-900"}`}>Términos y Condiciones</h1>
             <p className={`text-xs ${darkMode ? "text-slate-400" : "text-gray-500"} mt-1`}>Última actualización: marzo de 2026</p>
           </div>
 

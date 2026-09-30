@@ -91,8 +91,8 @@ export default function UpgradePage() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6 text-gray-800">
-      <div className="max-w-md w-full bg-white p-8 rounded-2xl shadow-xl text-center space-y-6 border border-gray-200">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4 sm:p-6 text-gray-800">
+      <div className="max-w-md w-full bg-white p-6 sm:p-8 rounded-2xl shadow-xl text-center space-y-6 border border-gray-200">
         
         {isSubscriptionActive ? (
           <>
@@ -128,22 +128,22 @@ export default function UpgradePage() {
             {/* Opciones de Planes (Mensual / Anual) */}
             <div className="space-y-3">
               {/* Opción Mensual */}
-              <div className="bg-blue-50 border border-blue-200 p-4 rounded-xl text-left text-sm flex justify-between items-center">
+              <div className="bg-blue-50 border border-blue-200 p-4 rounded-xl text-left text-sm flex flex-col sm:flex-row gap-3 sm:justify-between sm:items-center">
                 <div>
                   <p className="font-semibold text-blue-900">Plan Mensual</p>
-                  <p className="text-blue-700">$10.000 / mes (Débito automático)</p>
+                  <p className="text-blue-700">$1.000 / mes (Débito automático)</p>
                 </div>
                 <button
                   onClick={() => handleCheckout('monthly')}
                   disabled={loading || !userId}
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg transition shadow-sm disabled:opacity-50 cursor-pointer text-xs"
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg transition shadow-sm disabled:opacity-50 cursor-pointer text-xs w-full sm:w-auto shrink-0"
                 >
                   {loading ? "..." : "Elegir Mensual"}
                 </button>
               </div>
 
               {/* Opción Anual */}
-              <div className="bg-purple-50 border border-purple-200 p-4 rounded-xl text-left text-sm flex justify-between items-center">
+              <div className="bg-purple-50 border border-purple-200 p-4 rounded-xl text-left text-sm flex flex-col sm:flex-row gap-3 sm:justify-between sm:items-center">
                 <div>
                   <p className="font-semibold text-purple-900">Plan Anual</p>
                   <p className="text-purple-700">$100.000 / año (Ahorro y acceso total)</p>
@@ -151,7 +151,7 @@ export default function UpgradePage() {
                 <button
                   onClick={() => handleCheckout('yearly')}
                   disabled={loading || !userId}
-                  className="bg-purple-600 hover:bg-purple-700 text-white font-medium px-4 py-2 rounded-lg transition shadow-sm disabled:opacity-50 cursor-pointer text-xs"
+                  className="bg-purple-600 hover:bg-purple-700 text-white font-medium px-4 py-2 rounded-lg transition shadow-sm disabled:opacity-50 cursor-pointer text-xs w-full sm:w-auto shrink-0"
                 >
                   {loading ? "..." : "Elegir Anual"}
                 </button>

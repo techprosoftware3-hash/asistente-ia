@@ -107,11 +107,11 @@ export default function GlobalKnowledgePage() {
   if (!mounted) return null;
 
   return (
-    <main className={`min-h-screen transition-colors duration-200 ${darkMode ? "bg-slate-950 text-slate-100" : "bg-gray-50 text-gray-900"} px-6 py-12`}>
+    <main className={`min-h-screen transition-colors duration-200 ${darkMode ? "bg-slate-950 text-slate-100" : "bg-gray-50 text-gray-900"} px-4 sm:px-6 py-6 sm:py-12`}>
       <div className="mx-auto max-w-4xl space-y-8">
         
         {/* Cabecera con botón de modo nocturno */}
-        <div className="flex justify-between items-start">
+        <div className="flex justify-between items-start gap-3">
           <div>
             <a
               href="/dashboard"
@@ -119,7 +119,7 @@ export default function GlobalKnowledgePage() {
             >
               ← Volver al dashboard
             </a>
-            <h1 className={`mt-4 text-3xl font-bold tracking-tight ${darkMode ? "text-white" : "text-gray-900"}`}>
+            <h1 className={`mt-4 text-2xl sm:text-3xl font-bold tracking-tight ${darkMode ? "text-white" : "text-gray-900"}`}>
               Base de Conocimiento Global
             </h1>
             <p className={`mt-1 text-sm ${darkMode ? "text-slate-400" : "text-gray-500"}`}>
@@ -143,7 +143,7 @@ export default function GlobalKnowledgePage() {
         </div>
 
         {/* Formulario de carga */}
-        <div className={`rounded-2xl border ${darkMode ? "bg-slate-900 border-slate-800" : "bg-white border-gray-200"} p-6 shadow-sm`}>
+        <div className={`rounded-2xl border ${darkMode ? "bg-slate-900 border-slate-800" : "bg-white border-gray-200"} p-4 sm:p-6 shadow-sm`}>
           <h2 className={`text-lg font-semibold ${darkMode ? "text-white" : "text-gray-900"} mb-4`}>
             Añadir directriz corporativa
           </h2>
@@ -226,7 +226,7 @@ export default function GlobalKnowledgePage() {
         </div>
 
         {/* Listado de memorias globales */}
-        <div className={`rounded-2xl border ${darkMode ? "bg-slate-900 border-slate-800" : "bg-white border-gray-200"} p-6 shadow-sm space-y-4`}>
+        <div className={`rounded-2xl border ${darkMode ? "bg-slate-900 border-slate-800" : "bg-white border-gray-200"} p-4 sm:p-6 shadow-sm space-y-4`}>
           <h2 className={`text-lg font-semibold ${darkMode ? "text-white" : "text-gray-900"}`}>
             Conocimiento activo en la empresa
           </h2>
@@ -239,7 +239,7 @@ export default function GlobalKnowledgePage() {
             <div className="space-y-3">
               {memories.map((m) => (
                 <div key={m.id} className={`p-4 rounded-xl border ${darkMode ? "border-slate-800 bg-slate-950/50" : "border-gray-200 bg-gray-50/50"} flex flex-col sm:flex-row justify-between items-start gap-4`}>
-                  <div className="space-y-1">
+                  <div className="space-y-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className={`font-semibold ${darkMode ? "text-white" : "text-gray-900"}`}>{m.title}</span>
                       <span className={`px-2 py-0.5 rounded-md text-[10px] font-mono font-medium ${darkMode ? "bg-slate-800 text-slate-300" : "bg-gray-200 text-gray-700"} uppercase`}>
@@ -247,7 +247,7 @@ export default function GlobalKnowledgePage() {
                       </span>
                       <span className="text-xs text-amber-500 font-medium">★ {m.importance}/5</span>
                     </div>
-                    <p className={`text-sm ${darkMode ? "text-slate-300" : "text-gray-600"} whitespace-pre-wrap`}>{m.content}</p>
+                    <p className={`text-sm ${darkMode ? "text-slate-300" : "text-gray-600"} whitespace-pre-wrap break-words`}>{m.content}</p>
                   </div>
                   <button
                     onClick={() => deleteMemory(m.id)}

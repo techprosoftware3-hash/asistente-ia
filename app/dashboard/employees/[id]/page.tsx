@@ -299,10 +299,10 @@ export default function EmployeeManagementPage() {
     setShareMessage(null);
 
     try {
-      const res = await fetch("/api/employees/share", {
+      const res = await fetch("/api/employees", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ employeeId, email: shareEmail }),
+        body: JSON.stringify({ action: "share", employeeId, email: shareEmail }),
       });
 
       const data = await res.json();
@@ -337,7 +337,7 @@ export default function EmployeeManagementPage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto p-6 bg-gray-50 min-h-screen text-gray-800">
+    <div className="w-full max-w-5xl mx-auto p-4 sm:p-6 bg-gray-50 min-h-screen text-gray-800">
       {!isSubscriptionActive && (
         <div className="mb-6 bg-amber-100 border-l-4 border-amber-500 text-amber-800 p-4 rounded-lg shadow-sm">
           <p className="font-semibold">⚠️ Modo de solo lectura</p>
@@ -346,31 +346,31 @@ export default function EmployeeManagementPage() {
       )}
 
       {/* Cabecera */}
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+        <div className="flex items-center gap-4 min-w-0">
           {avatarUrl ? (
             <img 
               src={avatarUrl} 
               alt={name} 
-              className="w-16 h-16 rounded-full object-cover border-2 border-blue-600 shadow-sm"
+              className="w-16 h-16 shrink-0 rounded-full object-cover border-2 border-blue-600 shadow-sm"
               onError={(e) => { (e.target as HTMLImageElement).src = "https://via.placeholder.com/150?text=Error"; }}
             />
           ) : (
-            <div className="w-16 h-16 rounded-full bg-blue-100 text-blue-600 font-bold flex items-center justify-center text-xl border-2 border-blue-300">
+            <div className="w-16 h-16 shrink-0 rounded-full bg-blue-100 text-blue-600 font-bold flex items-center justify-center text-xl border-2 border-blue-300">
               {name ? name.charAt(0).toUpperCase() : "AI"}
             </div>
           )}
-          <div>
+          <div className="min-w-0">
             <button onClick={() => router.push("/dashboard")} className="text-sm text-blue-600 hover:underline mb-1 inline-block">
               ← Volver al Dashboard
             </button>
-            <h1 className="text-3xl font-bold">{name}</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold break-words">{name}</h1>
             <p className="text-gray-500">{role}</p>
           </div>
         </div>
         <button
           onClick={() => router.push(`/dashboard/chat/${employeeId}`)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition"
+          className="w-full sm:w-auto shrink-0 bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition"
         >
           💬 Ir al Chat en Vivo
         </button>
@@ -400,7 +400,7 @@ export default function EmployeeManagementPage() {
 
       {/* 1. PERFIL */}
       {activeTab === "profile" && (
-        <form onSubmit={handleSaveProfile} className="bg-white p-6 rounded-xl shadow space-y-4">
+        <form onSubmit={handleSaveProfile} className="bg-white p-4 sm:p-6 rounded-xl shadow space-y-4">
           <h2 className="text-xl font-semibold mb-4">Configuración del Empleado Virtual</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -424,7 +424,7 @@ export default function EmployeeManagementPage() {
             <label className="block text-sm font-medium text-gray-700 mb-1">Instrucciones y Personalidad (System Prompt)</label>
             <textarea value={instructions} onChange={(e) => setInstructions(e.target.value)} disabled={!isSubscriptionActive} rows={5} className="w-full border rounded-lg p-2.5 outline-none font-mono text-sm disabled:bg-gray-100" />
           </div>
-          <div className="flex justify-between items-center pt-4 border-t">
+          <div className="flex flex-wrap justify-between items-center gap-3 pt-4 border-t">
             <button type="submit" disabled={saving || !isSubscriptionActive} className="bg-blue-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-blue-700 transition disabled:opacity-50">
               {saving ? "Guardando..." : "Guardar Cambios"}
             </button>
@@ -438,20 +438,20 @@ export default function EmployeeManagementPage() {
       {/* 2. MEMORIAS */}
       {activeTab === "memories" && (
         <div className="space-y-6">
-          <form onSubmit={handleAddMemory} className="bg-white p-6 rounded-xl shadow flex gap-3">
+          <form onSubmit={handleAddMemory} className="bg-white p-4 sm:p-6 rounded-xl shadow flex flex-col sm:flex-row gap-3">
             <input type="text" value={newMemory} onChange={(e) => setNewMemory(e.target.value)} disabled={!isSubscriptionActive} placeholder="Añade una nueva memoria..." className="flex-1 border rounded-lg p-2.5 outline-none disabled:bg-gray-100" />
             <button type="submit" disabled={!isSubscriptionActive} className="bg-green-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-green-700 transition disabled:opacity-50">
               + Agregar Memoria
             </button>
           </form>
-          <div className="bg-white p-6 rounded-xl shadow space-y-3">
+          <div className="bg-white p-4 sm:p-6 rounded-xl shadow space-y-3">
             <h2 className="text-xl font-semibold mb-2">Memoria Interna Actual</h2>
             {memories.length === 0 ? <p className="text-gray-400 italic">No hay notas registradas.</p> : (
               memories.map((mem) => (
-                <div key={mem.id} className="flex justify-between items-center bg-gray-50 border p-3 rounded-lg">
-                  <p className="text-sm">{mem.content}</p>
+                <div key={mem.id} className="flex justify-between items-center gap-3 bg-gray-50 border p-3 rounded-lg">
+                  <p className="text-sm min-w-0 break-words">{mem.content}</p>
                   {isSubscriptionActive && (
-                    <button onClick={() => handleDeleteMemory(mem.id)} className="text-red-500 hover:text-red-700 text-sm font-medium ml-4">Eliminar</button>
+                    <button onClick={() => handleDeleteMemory(mem.id)} className="text-red-500 hover:text-red-700 text-sm font-medium shrink-0">Eliminar</button>
                   )}
                 </div>
               ))
@@ -463,7 +463,7 @@ export default function EmployeeManagementPage() {
       {/* 3. NUEVA PESTAÑA: DOCUMENTOS Y FOTOS */}
       {activeTab === "documents" && (
         <div className="space-y-6">
-          <div className="bg-white p-6 rounded-xl shadow space-y-4">
+          <div className="bg-white p-4 sm:p-6 rounded-xl shadow space-y-4">
             <h2 className="text-xl font-semibold">Subir PDFs o Imágenes a la Memoria</h2>
             <p className="text-sm text-gray-500">Sube manuales, políticas en PDF o fotos para que tu empleado virtual pueda consultarlos y compartirlos en las conversaciones.</p>
             
@@ -477,19 +477,19 @@ export default function EmployeeManagementPage() {
             {uploadingDoc && <p className="text-sm text-blue-600 font-medium animate-pulse">Subiendo archivo y procesando...</p>}
           </div>
 
-          <div className="bg-white p-6 rounded-xl shadow space-y-3">
+          <div className="bg-white p-4 sm:p-6 rounded-xl shadow space-y-3">
             <h2 className="text-xl font-semibold mb-2">Documentos Cargados</h2>
             {documents.length === 0 ? <p className="text-gray-400 italic">No hay documentos ni fotos adjuntas todavía.</p> : (
               documents.map((doc) => (
-                <div key={doc.id} className="flex justify-between items-center bg-gray-50 border p-3 rounded-lg">
-                  <div>
-                    <a href={doc.file_url} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-blue-600 hover:underline flex items-center gap-2">
+                <div key={doc.id} className="flex justify-between items-center gap-3 bg-gray-50 border p-3 rounded-lg">
+                  <div className="min-w-0">
+                    <a href={doc.file_url} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-blue-600 hover:underline flex items-center gap-2 break-all">
                       📄 {doc.title} ({doc.file_type.toUpperCase()})
                     </a>
                     <span className="text-xs text-gray-400">{new Date(doc.created_at).toLocaleDateString()}</span>
                   </div>
                   {isSubscriptionActive && (
-                    <button onClick={() => handleDeleteDocument(doc.id)} className="text-red-500 hover:text-red-700 text-sm font-medium">Eliminar</button>
+                    <button onClick={() => handleDeleteDocument(doc.id)} className="text-red-500 hover:text-red-700 text-sm font-medium shrink-0">Eliminar</button>
                   )}
                 </div>
               ))
@@ -500,12 +500,12 @@ export default function EmployeeManagementPage() {
 
       {/* 4. CANAL EXTERNO */}
       {activeTab === "channel" && (
-        <div className="bg-white p-6 rounded-xl shadow space-y-4">
+        <div className="bg-white p-4 sm:p-6 rounded-xl shadow space-y-4">
           <h2 className="text-xl font-semibold">Integración con Canales Externos</h2>
           <div className="bg-gray-100 p-4 rounded-lg border space-y-2">
             <label className="block text-xs font-bold text-gray-500 uppercase">Employee ID</label>
             <div className="flex items-center gap-2">
-              <input type="text" readOnly value={employeeId} className="w-full bg-white border rounded p-2 font-mono text-sm text-gray-700" />
+              <input type="text" readOnly value={employeeId} className="w-full min-w-0 bg-white border rounded p-2 font-mono text-sm text-gray-700" />
               <button onClick={() => { navigator.clipboard.writeText(employeeId); alert("¡ID copiado!"); }} className="bg-gray-800 text-white px-4 py-2 rounded text-sm hover:bg-black transition">Copiar</button>
             </div>
           </div>
@@ -514,13 +514,13 @@ export default function EmployeeManagementPage() {
 
       {/* 5. TAREAS */}
       {activeTab === "tasks" && (
-        <div className="bg-white p-6 rounded-xl shadow space-y-4">
+        <div className="bg-white p-4 sm:p-6 rounded-xl shadow space-y-4">
           <h2 className="text-xl font-semibold">Tareas Registradas</h2>
           {tasks.length === 0 ? <p className="text-gray-400 italic">No hay tareas generadas todavía.</p> : (
             tasks.map((task) => (
               <div key={task.id} className="border p-4 rounded-lg bg-gray-50 space-y-1">
-                <div className="flex justify-between items-center">
-                  <h3 className="font-semibold text-blue-900">{task.title}</h3>
+                <div className="flex flex-wrap justify-between items-center gap-2">
+                  <h3 className="font-semibold text-blue-900 break-words">{task.title}</h3>
                   <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${task.status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>{task.status}</span>
                 </div>
                 <p className="text-sm text-gray-600">{task.description}</p>
@@ -533,9 +533,9 @@ export default function EmployeeManagementPage() {
       {/* 6. COMPARTIR */}
       {activeTab === "share" && (
         <div className="space-y-6">
-          <div className="bg-white p-6 rounded-xl shadow space-y-4">
+          <div className="bg-white p-4 sm:p-6 rounded-xl shadow space-y-4">
             <h2 className="text-xl font-semibold">Compartir Agente con Otro Usuario</h2>
-            <form onSubmit={handleShare} className="flex gap-3">
+            <form onSubmit={handleShare} className="flex flex-col sm:flex-row gap-3">
               <input type="email" placeholder="correo@ejemplo.com" value={shareEmail} onChange={(e) => setShareEmail(e.target.value)} disabled={!isSubscriptionActive} required className="flex-1 border rounded-lg p-2.5 outline-none text-sm disabled:bg-gray-100" />
               <button type="submit" disabled={sharing || !isSubscriptionActive} className="bg-black text-white px-5 py-2.5 rounded-lg font-medium hover:bg-gray-800 transition disabled:opacity-50 text-sm">
                 {sharing ? "Compartiendo..." : "Compartir 👥"}
@@ -544,13 +544,13 @@ export default function EmployeeManagementPage() {
             {shareMessage && <p className={`text-xs font-medium ${shareMessage.type === "success" ? "text-green-600" : "text-red-600"}`}>{shareMessage.text}</p>}
           </div>
 
-          <div className="bg-white p-6 rounded-xl shadow space-y-3">
+          <div className="bg-white p-4 sm:p-6 rounded-xl shadow space-y-3">
             <h2 className="text-xl font-semibold mb-2">Usuarios con Acceso</h2>
             {sharedUsers.length === 0 ? <p className="text-gray-400 italic">Este agente aún no ha sido compartido.</p> : (
               sharedUsers.map((share) => (
-                <div key={share.id} className="flex justify-between items-center bg-gray-50 border p-3 rounded-lg">
-                  <div>
-                    <p className="text-sm font-medium text-gray-800">{share.shared_with_email}</p>
+                <div key={share.id} className="flex flex-wrap justify-between items-center gap-3 bg-gray-50 border p-3 rounded-lg">
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-gray-800 break-all">{share.shared_with_email}</p>
                     <p className="text-xs text-gray-400">Compartido el: {new Date(share.created_at || Date.now()).toLocaleDateString()}</p>
                   </div>
                   {isSubscriptionActive && (

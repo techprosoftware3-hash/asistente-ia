@@ -78,15 +78,13 @@ export default function NewEmployeePage() {
     setLoading(true);
 
     try {
-      let endpoint = "/api/employees/generate";
-      let payload: any = { description };
+      let payload: any = { action: "generate", description };
 
       if (mode === "manual") {
-        endpoint = "/api/employees/create-manual";
-        payload = { name, role, objective, instructions };
+        payload = { action: "create-manual", name, role, objective, instructions };
       }
 
-      const response = await fetch(endpoint, {
+      const response = await fetch("/api/employees", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -124,7 +122,7 @@ export default function NewEmployeePage() {
   }
 
   return (
-    <main className={`min-h-screen transition-colors duration-200 ${darkMode ? "bg-slate-950 text-slate-100" : "bg-gray-50 text-gray-900"} p-8`}>
+    <main className={`min-h-screen transition-colors duration-200 ${darkMode ? "bg-slate-950 text-slate-100" : "bg-gray-50 text-gray-900"} p-4 sm:p-8`}>
       <div className="mx-auto max-w-3xl">
         
         {/* Cabecera con botón de retorno y alternador de tema */}
@@ -151,7 +149,7 @@ export default function NewEmployeePage() {
           </button>
         </div>
 
-        <h1 className={`text-4xl font-bold ${darkMode ? "text-white" : "text-gray-900"}`}>Crear y personalizar tu asistente</h1>
+        <h1 className={`text-2xl sm:text-4xl font-bold ${darkMode ? "text-white" : "text-gray-900"}`}>Crear y personalizar tu asistente</h1>
         <p className={`mt-3 ${darkMode ? "text-slate-400" : "text-gray-600"}`}>
           Elegí si preferís diseñarlo automáticamente con IA o completarlo manualmente paso a paso.
         </p>
@@ -190,7 +188,7 @@ export default function NewEmployeePage() {
           </button>
         </div>
 
-        <div className={`mt-6 rounded-3xl border ${darkMode ? "bg-slate-900 border-slate-800" : "bg-white border-gray-200"} p-8 shadow-sm transition-colors duration-200`}>
+        <div className={`mt-6 rounded-3xl border ${darkMode ? "bg-slate-900 border-slate-800" : "bg-white border-gray-200"} p-5 sm:p-8 shadow-sm transition-colors duration-200`}>
           <form onSubmit={handleCreate}>
             {mode === "ai" ? (
               /* MODO IA */

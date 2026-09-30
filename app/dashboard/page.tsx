@@ -121,14 +121,14 @@ export default function DashboardPage() {
   if (!mounted) return null;
 
   return (
-    <div className={`min-h-screen transition-colors duration-200 ${darkMode ? "bg-slate-950 text-slate-100" : "bg-[#F8FAFC] text-slate-900"} selection:bg-blue-600 selection:text-white p-6 md:p-10`}>
+    <div className={`min-h-screen transition-colors duration-200 ${darkMode ? "bg-slate-950 text-slate-100" : "bg-[#F8FAFC] text-slate-900"} selection:bg-blue-600 selection:text-white p-4 sm:p-6 md:p-10`}>
       <div className="max-w-7xl mx-auto space-y-6">
         
         {/* Cabecera Principal */}
-        <header className={`${darkMode ? "bg-slate-900/80 border-slate-800" : "bg-white/80 border-slate-200/80"} backdrop-blur-md sticky top-6 z-20 border shadow-xs rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition-all`}>
+        <header className={`${darkMode ? "bg-slate-900/80 border-slate-800" : "bg-white/80 border-slate-200/80"} backdrop-blur-md md:sticky md:top-6 z-20 border shadow-xs rounded-2xl p-4 sm:p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition-all`}>
           <div className="space-y-1">
-            <div className="flex items-center gap-3">
-              <h1 className={`text-2xl font-extrabold tracking-tight ${darkMode ? "text-white" : "text-slate-900"}`}>
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+              <h1 className={`text-xl sm:text-2xl font-extrabold break-words tracking-tight ${darkMode ? "text-white" : "text-slate-900"}`}>
                 {companyName || "Mi Empresa / Oficina"}
               </h1>
               <button 
@@ -185,7 +185,7 @@ export default function DashboardPage() {
 
         {/* Formulario desplegable para editar Nombre y Logo */}
         {isEditingCompany && (
-          <form onSubmit={handleSaveCompany} className={`${darkMode ? "bg-slate-900 border-blue-900" : "bg-white border-blue-200/85"} border p-6 rounded-2xl shadow-sm space-y-4 animate-in fade-in slide-in-from-top-2 duration-200`}>
+          <form onSubmit={handleSaveCompany} className={`${darkMode ? "bg-slate-900 border-blue-900" : "bg-white border-blue-200/85"} border p-4 sm:p-6 rounded-2xl shadow-sm space-y-4 animate-in fade-in slide-in-from-top-2 duration-200`}>
             <div>
               <h3 className={`text-sm font-bold ${darkMode ? "text-white" : "text-slate-900"}`}>🏢 Configurar Organización & Logo</h3>
               <p className={`text-xs ${darkMode ? "text-slate-400" : "text-slate-500"} mt-0.5`}>Personaliza el nombre y agrega el enlace directo al logo corporativo para tus reportes en PDF.</p>
@@ -254,7 +254,7 @@ export default function DashboardPage() {
             </div>
             
             {/* Barra de Navegación Rápida Compacta */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 shrink-0">
+            <div className="flex flex-wrap lg:flex-nowrap items-center gap-2 w-full lg:w-auto shrink-0">
               <button onClick={() => router.push("/dashboard/files")} className={`text-xs font-medium ${darkMode ? "bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-700" : "bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200/80"} border px-2.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer`}>
                 📂 <span>Archivos</span>
               </button>
@@ -317,7 +317,7 @@ export default function DashboardPage() {
 
         {/* Listado de Empleados */}
         <section className="space-y-4">
-          <div className="flex justify-between items-center px-1">
+          <div className="flex flex-wrap justify-between items-center gap-2 px-1">
             <h2 className={`text-base font-bold ${darkMode ? "text-white" : "text-slate-900"} tracking-tight`}>Asistentes virtuales asignados</h2>
             <span className={`text-xs font-medium ${darkMode ? "bg-slate-800 text-slate-300" : "bg-slate-200/60 text-slate-600"} px-2.5 py-0.5 rounded-full`}>{employees.length} registrados</span>
           </div>
@@ -347,7 +347,7 @@ export default function DashboardPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {employees.map((emp) => (
-                <div key={emp.id} className={`${darkMode ? "bg-slate-900 border-slate-800" : "bg-white border-slate-200/80"} border shadow-xs hover:shadow-md transition-all rounded-2xl p-6 flex flex-col justify-between space-y-5`}>
+                <div key={emp.id} className={`${darkMode ? "bg-slate-900 border-slate-800" : "bg-white border-slate-200/80"} border shadow-xs hover:shadow-md transition-all rounded-2xl p-4 sm:p-6 flex flex-col justify-between space-y-5`}>
                   <div className="space-y-3">
                     <div className="flex items-center gap-3">
                       <img 
@@ -405,7 +405,7 @@ export default function DashboardPage() {
         </section>
 
         {/* Pie de página con enlaces legales */}
-        <footer className={`pt-8 pb-4 border-t ${darkMode ? "border-slate-800/80 text-slate-500" : "border-slate-200/80 text-slate-400"} text-center text-xs flex flex-wrap justify-center gap-6`}>
+        <footer className={`pt-8 pb-4 border-t ${darkMode ? "border-slate-800/80 text-slate-500" : "border-slate-200/80 text-slate-400"} text-center text-xs flex flex-wrap justify-center gap-x-6 gap-y-2`}>
           <span>© 2026 OS IA - Todos los derechos reservados</span>
           <span>•</span>
           <button 
