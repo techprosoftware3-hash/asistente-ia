@@ -423,7 +423,7 @@ export default function DashboardPage() {
 
         {/* Pie de página con enlaces legales */}
         <footer className={`pt-8 pb-4 border-t ${darkMode ? "border-slate-800/80 text-slate-500" : "border-slate-200/80 text-slate-400"} text-center text-xs flex flex-wrap justify-center gap-x-6 gap-y-2`}>
-          <span>© 2026 OS IA - Todos los derechos reservados</span>
+          <span>© 2026 miasistentelab.com - Todos los derechos reservados</span>
           <span>•</span>
           <button 
             onClick={() => router.push("/terms")} 
@@ -440,10 +440,10 @@ export default function DashboardPage() {
           </button>
           <span>•</span>
           <a
-            href="mailto:techprosoftware3@gmail.com?subject=Contacto%20%2F%20Reclamo"
+            href="mailto:miasistentelab@gmail.com?subject=Contacto%20%2F%20Reclamo"
             className="hover:underline transition-colors break-all"
           >
-            Contacto y reclamos: techprosoftware3@gmail.com
+            Contacto y reclamos: miasistentelab@gmail.com
           </a>
         </footer>
       </div>

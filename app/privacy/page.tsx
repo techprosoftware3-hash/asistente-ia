@@ -73,7 +73,7 @@ export default function PrivacyPage() {
           </div>
 
           <div className={`pt-6 border-t ${darkMode ? "border-slate-800" : "border-gray-100"} flex flex-col sm:flex-row justify-between items-center gap-4 text-xs`}>
-            <span className={darkMode ? "text-slate-500" : "text-gray-400"}>© 2026 Techpro Computación · Todos los derechos reservados</span>
+            <span className={darkMode ? "text-slate-500" : "text-gray-400"}>© 2026 miasistentelab.com · Todos los derechos reservados</span>
             <button 
               onClick={() => router.push("/terms")}
               className={`underline font-medium ${darkMode ? "text-blue-400 hover:text-blue-300" : "text-blue-600 hover:text-blue-700"} cursor-pointer`}
