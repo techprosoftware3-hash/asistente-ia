@@ -12,6 +12,8 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [userEmail, setUserEmail] = useState("");
   const [isSubscriptionActive, setIsSubscriptionActive] = useState(true);
+  const [userPlan, setUserPlan] = useState<'personal' | 'enterprise'>('personal');
+  const [ownedEmployeesCount, setOwnedEmployeesCount] = useState(0);
   
   // Estados para la gestión de la empresa u oficina
   const [companyName, setCompanyName] = useState("");
@@ -55,6 +57,9 @@ export default function DashboardPage() {
         const active = Boolean(isTrialActive || isSubActive);
         setIsSubscriptionActive(active);
 
+        const plan: 'personal' | 'enterprise' = (profile.subscription_plan as 'personal' | 'enterprise') || 'personal';
+        setUserPlan(plan);
+
         if (!active) {
           const verification = await fetch("/api/payment/webhook")
             .then((res) => (res.ok ? res.json() : null))
@@ -78,6 +83,8 @@ export default function DashboardPage() {
         .from("employees")
         .select("*")
         .eq("user_id", user.id);
+
+      setOwnedEmployeesCount(ownedEmployees?.length || 0);
 
       // 3. Obtener IDs de empleados compartidos
       let sharedEmployees: any[] = [];
@@ -120,9 +127,9 @@ export default function DashboardPage() {
     if (user) {
       const { error } = await supabase
         .from("profiles")
-        .update({ 
+        .update({
           company_name: companyName,
-          company_logo: companyLogo 
+          company_logo: companyLogo
         })
         .eq("id", user.id);
 
@@ -133,6 +140,12 @@ export default function DashboardPage() {
       }
     }
     setSavingCompany(false);
+  };
+
+  const canCreateMoreAssistants = () => {
+    if (!isSubscriptionActive) return false;
+    const limit = userPlan === 'enterprise' ? Infinity : 5;
+    return ownedEmployeesCount < limit;
   };
 
   if (!mounted) return null;
@@ -282,17 +295,22 @@ export default function DashboardPage() {
                 📋 <span>Tareas & Auto</span>
               </button>
               
-              <button 
+              <button
                 onClick={() => {
                   if (!isSubscriptionActive) {
                     alert("Tu periodo de prueba ha finalizado. La creación de nuevos asistentes está deshabilitada.");
                     return;
                   }
+                  if (!canCreateMoreAssistants()) {
+                    const limit = userPlan === 'enterprise' ? Infinity : 5;
+                    alert(`Has alcanzado el límite de asistentes (${limit === Infinity ? 'ilimitados' : `máximo ${limit}`}). Actualiza tu plan para crear más.`);
+                    return;
+                  }
                   router.push("/dashboard/new");
-                }} 
+                }}
                 className={`text-xs font-medium px-3 py-1.5 rounded-xl transition-all shadow-xs whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
-                  isSubscriptionActive 
-                    ? "bg-blue-600 hover:bg-blue-700 text-white" 
+                  canCreateMoreAssistants()
+                    ? "bg-blue-600 hover:bg-blue-700 text-white"
                     : "bg-slate-700 text-slate-400 cursor-not-allowed"
                 }`}
               >
@@ -310,13 +328,17 @@ export default function DashboardPage() {
               </div>
               <p className={`text-[11px] text-right ${darkMode ? "text-slate-400" : "text-slate-500"} max-w-[120px]`}>Agentes configurados o compartidos</p>
             </div>
-            
+
             <div className={`${darkMode ? "bg-slate-800/50 border-slate-700/50" : "bg-slate-50/70 border-slate-200/60"} border p-3.5 rounded-xl flex items-center justify-between transition-colors`}>
               <div className="space-y-0.5">
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Agentes Activos</p>
-                <p className="text-xl font-extrabold text-blue-500">{employees.length}</p>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Límite del Plan</p>
+                <p className={`text-xl font-extrabold ${!canCreateMoreAssistants() ? "text-amber-500" : "text-emerald-500"}`}>
+                  {userPlan === 'enterprise' ? '∞' : `${ownedEmployeesCount}/5`}
+                </p>
               </div>
-              <p className={`text-[11px] text-right ${darkMode ? "text-slate-400" : "text-slate-500"} max-w-[120px]`}>Listos para despachar tareas</p>
+              <p className={`text-[11px] text-right ${darkMode ? "text-slate-400" : "text-slate-500"} max-w-[120px]`}>
+                {userPlan === 'enterprise' ? 'Enterprise: Ilimitado' : 'Personal: Máximo 5'}
+              </p>
             </div>
 
             <div className={`${darkMode ? "bg-slate-800/50 border-slate-700/50" : "bg-slate-50/70 border-slate-200/60"} border p-3.5 rounded-xl flex items-center justify-between transition-colors`}>
@@ -346,16 +368,21 @@ export default function DashboardPage() {
           ) : employees.length === 0 ? (
             <div className={`${darkMode ? "bg-slate-900 border-slate-800" : "bg-white border-slate-300"} border border-dashed rounded-2xl p-12 text-center space-y-3`}>
               <p className={`${darkMode ? "text-slate-300" : "text-slate-600"} font-medium text-sm`}>No hay empleados digitales todavía</p>
-              <button 
+              <button
                 onClick={() => {
                   if (!isSubscriptionActive) {
                     alert("Tu periodo de prueba ha finalizado.");
                     return;
                   }
+                  if (!canCreateMoreAssistants()) {
+                    const limit = userPlan === 'enterprise' ? Infinity : 5;
+                    alert(`Has alcanzado el límite de asistentes (${limit === Infinity ? 'ilimitados' : `máximo ${limit}`}). Actualiza tu plan para crear más.`);
+                    return;
+                  }
                   router.push("/dashboard/new");
-                }} 
+                }}
                 className={`text-xs font-medium px-4 py-2.5 rounded-xl text-white transition-all cursor-pointer ${
-                  isSubscriptionActive ? "bg-blue-600 hover:bg-blue-700" : "bg-slate-700 cursor-not-allowed"
+                  canCreateMoreAssistants() ? "bg-blue-600 hover:bg-blue-700" : "bg-slate-700 cursor-not-allowed"
                 }`}
               >
                 + Crear Asistente
