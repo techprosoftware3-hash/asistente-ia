@@ -133,7 +133,7 @@ export default function UpgradePage() {
               <div className="bg-blue-50 border border-blue-200 p-4 rounded-xl text-left text-sm flex flex-col sm:flex-row gap-3 sm:justify-between sm:items-center">
                 <div>
                   <p className="font-semibold text-blue-900">Plan Personal</p>
-                  <p className="text-blue-700">$1.000 / mes • Hasta 5 asistentes</p>
+                  <p className="text-blue-700">$25.000 ars / mes • Hasta 5 asistentes</p>
                   <p className="text-blue-600 text-xs mt-1">Ideal para emprendedores y freelancers</p>
                 </div>
                 <button
@@ -149,7 +149,7 @@ export default function UpgradePage() {
               <div className="bg-purple-50 border border-purple-200 p-4 rounded-xl text-left text-sm flex flex-col sm:flex-row gap-3 sm:justify-between sm:items-center">
                 <div>
                   <p className="font-semibold text-purple-900">Plan Enterprise</p>
-                  <p className="text-purple-700">$60.000 / mes • Asistentes ilimitados</p>
+                  <p className="text-purple-700">$60.000 ars / mes • Asistentes ilimitados</p>
                   <p className="text-purple-600 text-xs mt-1">Para empresas y equipos grandes</p>
                 </div>
                 <button
