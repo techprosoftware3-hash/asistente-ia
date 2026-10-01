@@ -8,8 +8,8 @@ export async function POST(req: Request) {
     const { userEmail, userId, planType } = await req.json();
 
     const isYearly = planType === 'yearly';
-    const unitPrice = isYearly ? 100000 : 1000;
-    const title = isYearly ? 'Suscripción Anual - AI Employees' : 'Suscripción Mensual - AI Employees';
+    const unitPrice = isYearly ? 350000 : 30000;
+    const title = isYearly ? 'Suscripción Anual - miasistentelab.com' : 'Suscripción Mensual - miasistentelab.com';
 
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || new URL(req.url).origin;
     const backUrl = `${baseUrl}/dashboard?payment=success`;
