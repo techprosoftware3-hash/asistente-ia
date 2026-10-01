@@ -26,6 +26,23 @@ const origin = request.headers.get("origin") || process.env.NEXT_PUBLIC_SITE_URL
 
 Sin `NEXT_PUBLIC_SITE_URL` configurado en Vercel, cae en el fallback `http://localhost:3000`, lo que genera URLs incorrectas en producción.
 
+## Configuración de Planes de Suscripción
+
+### Nuevos Planes Implementados
+
+- **Plan Personal**: $1.000/mes - Hasta 5 asistentes virtuales
+- **Plan Enterprise**: $60.000/mes - Asistentes ilimitados
+
+### Cambios en la Base de Datos
+
+Necesitas agregar la columna `subscription_plan` a la tabla `profiles` en Supabase:
+
+```sql
+ALTER TABLE profiles ADD COLUMN subscription_plan TEXT DEFAULT 'personal';
+```
+
+Esta columna guardará el tipo de plan del usuario ('personal' o 'enterprise').
+
 ### Variables de entorno necesarias
 
 Asegúrate de tener estas variables configuradas en Vercel:
