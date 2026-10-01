@@ -2,10 +2,16 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import OpenAI from "openai";
 
-const openrouter = new OpenAI({
-  apiKey: process.env.OPENROUTER_API_KEY || "",
-  baseURL: "https://openrouter.ai/api/v1",
-});
+const getOpenRouter = () => {
+  const apiKey = process.env.OPENROUTER_API_KEY;
+  if (!apiKey) {
+    throw new Error("OPENROUTER_API_KEY is not configured");
+  }
+  return new OpenAI({
+    apiKey,
+    baseURL: "https://openrouter.ai/api/v1",
+  });
+};
 
 const MODEL_NAME = "google/gemini-3.5-flash"; 
 
@@ -203,6 +209,7 @@ ${employeeDocsText || "No hay documentos ni fotos cargados todavía."}`;
       }
     ];
 
+    const openrouter = getOpenRouter();
     const response = await openrouter.chat.completions.create({
       model: MODEL_NAME,
       messages,

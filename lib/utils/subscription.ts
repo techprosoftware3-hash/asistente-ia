@@ -30,7 +30,7 @@ export async function checkUserSubscription(userId: string): Promise<Subscriptio
   const employeeLimit = plan === 'enterprise' ? Infinity : 5;
 
   return {
-    isActive: isTrialActive || isSubActive,
+    isActive: Boolean(isTrialActive || isSubActive),
     plan,
     employeeLimit,
   };

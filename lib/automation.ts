@@ -3,10 +3,15 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { executeEmployeeAction } from "@/lib/actions";
 import { getAvailableTools } from "@/lib/tools/registry";
 
-const openrouter = new OpenAI({
-  apiKey: process.env.OPENROUTER_API_KEY,
-  baseURL: "https://openrouter.ai/api/v1",
-});
+const getOpenRouter = () => {
+  if (!process.env.OPENROUTER_API_KEY) {
+    throw new Error("OPENROUTER_API_KEY is not configured");
+  }
+  return new OpenAI({
+    apiKey: process.env.OPENROUTER_API_KEY,
+    baseURL: "https://openrouter.ai/api/v1",
+  });
+};
 
 type Frequency = "once" | "daily" | "weekly";
 
@@ -768,6 +773,7 @@ Para terminar:
 `;
 
         try {
+          const openrouter = getOpenRouter();
           const response =
             await openrouter.chat.completions.create(
               {

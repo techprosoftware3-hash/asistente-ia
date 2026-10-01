@@ -7,7 +7,6 @@ import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
   const router = useRouter();
-  const supabase = createClient();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,6 +23,8 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
     setSuccessMsg("");
+
+    const supabase = createClient();
 
     // SI SUPERÓ LOS 3 INTENTOS Y ESTÁ USANDO LA PALABRA SECRETA
     if (failedAttempts >= 3) {

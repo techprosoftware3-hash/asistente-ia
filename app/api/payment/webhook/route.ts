@@ -3,10 +3,12 @@ import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { createClient as createServerSupabaseClient } from '@/lib/supabase/server';
 
 // Cliente de Supabase con Service Role para actualizar la base de datos sin restricciones de usuario
-const supabaseAdmin = createSupabaseClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+const supabaseAdmin = process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY
+  ? createSupabaseClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_ROLE_KEY
+    )
+  : null;
 
 type MercadoPagoPreApproval = {
   status?: string;
@@ -34,6 +36,11 @@ async function fetchMercadoPago<T>(path: string): Promise<T | null> {
 }
 
 async function activateSubscription(userId: string, endDate: Date, planType: string = 'personal') {
+  if (!supabaseAdmin) {
+    console.error("Supabase admin client not configured");
+    return;
+  }
+
   const { error } = await supabaseAdmin
     .from('profiles')
     .update({
@@ -88,9 +95,9 @@ async function activateFromUserSearch(userId: string, email?: string) {
       `/preapproval/search?${params}`
     );
     const match = result?.results?.find(
-      (p) => p.external_reference.startsWith(userId) && p.status === 'authorized'
+      (p) => p.external_reference && p.external_reference.startsWith(userId) && p.status === 'authorized'
     );
-    if (match) {
+    if (match && match.external_reference) {
       const externalReference = match.external_reference;
       const [parsedUserId, planType] = externalReference.split(':');
       if (parsedUserId === userId) {

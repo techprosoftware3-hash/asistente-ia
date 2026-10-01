@@ -2,10 +2,15 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import OpenAI from "openai";
 
-const openrouter = new OpenAI({
-  apiKey: process.env.OPENROUTER_API_KEY,
-  baseURL: "https://openrouter.ai/api/v1",
-});
+const getOpenRouter = () => {
+  if (!process.env.OPENROUTER_API_KEY) {
+    throw new Error("OPENROUTER_API_KEY is not configured");
+  }
+  return new OpenAI({
+    apiKey: process.env.OPENROUTER_API_KEY,
+    baseURL: "https://openrouter.ai/api/v1",
+  });
+};
 
 const VALID_FREQUENCIES = ["once", "daily", "weekly"] as const;
 type Frequency = (typeof VALID_FREQUENCIES)[number];
@@ -138,6 +143,7 @@ IMPORTANTE:
 - Respondé como el empleado.
 `;
 
+        const openrouter = getOpenRouter();
         const response = await openrouter.chat.completions.create({
           model: process.env.OPENROUTER_MODEL || "openai/gpt-4o",
           max_tokens: 1000,

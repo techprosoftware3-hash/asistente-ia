@@ -7,7 +7,6 @@ import { createClient } from "@/lib/supabase/client";
 
 export default function SignupPage() {
   const router = useRouter();
-  const supabase = createClient();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,6 +17,7 @@ export default function SignupPage() {
 
   async function handleSignup(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const supabase = createClient();
 
     if (!secretWord.trim()) {
       setError("Por favor, ingresa una palabra secreta para recuperar tu cuenta.");
