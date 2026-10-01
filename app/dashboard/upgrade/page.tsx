@@ -31,7 +31,7 @@ export default function UpgradePage() {
       // Consultar el perfil del usuario para verificar su estado y fechas
       const { data: profile } = await supabase
         .from("profiles")
-        .select("trial_ends_at, subscription_status, subscription_end_date")
+        .select("trial_ends_at, subscription_status, subscription_end_date, subscription_plan")
         .eq("id", user.id)
         .maybeSingle();
 
@@ -59,8 +59,8 @@ export default function UpgradePage() {
     checkSubscriptionStatus();
   }, [supabase, router]);
 
-  // Función modificada para recibir el tipo de plan ('monthly' o 'yearly')
-  const handleCheckout = async (planType: 'monthly' | 'yearly') => {
+  // Función modificada para recibir el tipo de plan ('personal' o 'enterprise')
+  const handleCheckout = async (planType: 'personal' | 'enterprise') => {
     if (!userId) return;
     setLoading(true);
     try {
@@ -127,35 +127,37 @@ export default function UpgradePage() {
               Tu acceso al sistema requiere una suscripción activa para seguir operando con tus empleados virtuales.
             </p>
 
-            {/* Opciones de Planes (Mensual / Anual) */}
+            {/* Opciones de Planes (Personal / Enterprise) */}
             <div className="space-y-3">
-              {/* Opción Mensual */}
+              {/* Plan Personal */}
               <div className="bg-blue-50 border border-blue-200 p-4 rounded-xl text-left text-sm flex flex-col sm:flex-row gap-3 sm:justify-between sm:items-center">
                 <div>
-                  <p className="font-semibold text-blue-900">Plan Mensual</p>
-                  <p className="text-blue-700">$1.000 / mes (Débito automático)</p>
+                  <p className="font-semibold text-blue-900">Plan Personal</p>
+                  <p className="text-blue-700">$1.000 / mes • Hasta 5 asistentes</p>
+                  <p className="text-blue-600 text-xs mt-1">Ideal para emprendedores y freelancers</p>
                 </div>
                 <button
-                  onClick={() => handleCheckout('monthly')}
+                  onClick={() => handleCheckout('personal')}
                   disabled={loading || !userId}
                   className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg transition shadow-sm disabled:opacity-50 cursor-pointer text-xs w-full sm:w-auto shrink-0"
                 >
-                  {loading ? "..." : "Elegir Mensual"}
+                  {loading ? "..." : "Elegir Personal"}
                 </button>
               </div>
 
-              {/* Opción Anual */}
+              {/* Plan Enterprise */}
               <div className="bg-purple-50 border border-purple-200 p-4 rounded-xl text-left text-sm flex flex-col sm:flex-row gap-3 sm:justify-between sm:items-center">
                 <div>
-                  <p className="font-semibold text-purple-900">Plan Anual</p>
-                  <p className="text-purple-700">$100.000 / año (Ahorro y acceso total)</p>
+                  <p className="font-semibold text-purple-900">Plan Enterprise</p>
+                  <p className="text-purple-700">$60.000 / mes • Asistentes ilimitados</p>
+                  <p className="text-purple-600 text-xs mt-1">Para empresas y equipos grandes</p>
                 </div>
                 <button
-                  onClick={() => handleCheckout('yearly')}
+                  onClick={() => handleCheckout('enterprise')}
                   disabled={loading || !userId}
                   className="bg-purple-600 hover:bg-purple-700 text-white font-medium px-4 py-2 rounded-lg transition shadow-sm disabled:opacity-50 cursor-pointer text-xs w-full sm:w-auto shrink-0"
                 >
-                  {loading ? "..." : "Elegir Anual"}
+                  {loading ? "..." : "Elegir Enterprise"}
                 </button>
               </div>
             </div>

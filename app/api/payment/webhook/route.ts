@@ -33,12 +33,13 @@ async function fetchMercadoPago<T>(path: string): Promise<T | null> {
   return res.json() as Promise<T>;
 }
 
-async function activateSubscription(userId: string, endDate: Date) {
+async function activateSubscription(userId: string, endDate: Date, planType: string = 'personal') {
   const { error } = await supabaseAdmin
     .from('profiles')
     .update({
       subscription_status: 'active',
       subscription_end_date: endDate.toISOString(),
+      subscription_plan: planType,
     })
     .eq('id', userId);
 
@@ -64,10 +65,14 @@ async function activateFromPreApproval(preApprovalId: string, expectedUserId?: s
   );
   if (!preApproval || preApproval.status !== 'authorized') return false;
 
-  const userId = preApproval.external_reference;
+  const externalReference = preApproval.external_reference;
+  if (!externalReference) return false;
+
+  // Parsear userId y planType del external_reference (formato: userId:planType)
+  const [userId, planType] = externalReference.split(':');
   if (!userId || (expectedUserId && userId !== expectedUserId)) return false;
 
-  await activateSubscription(userId, subscriptionEndDate(preApproval));
+  await activateSubscription(userId, subscriptionEndDate(preApproval), planType || 'personal');
   return true;
 }
 
@@ -83,11 +88,15 @@ async function activateFromUserSearch(userId: string, email?: string) {
       `/preapproval/search?${params}`
     );
     const match = result?.results?.find(
-      (p) => p.external_reference === userId && p.status === 'authorized'
+      (p) => p.external_reference.startsWith(userId) && p.status === 'authorized'
     );
     if (match) {
-      await activateSubscription(userId, subscriptionEndDate(match));
-      return true;
+      const externalReference = match.external_reference;
+      const [parsedUserId, planType] = externalReference.split(':');
+      if (parsedUserId === userId) {
+        await activateSubscription(userId, subscriptionEndDate(match), planType || 'personal');
+        return true;
+      }
     }
   }
   return false;
@@ -121,9 +130,11 @@ export async function POST(req: Request) {
       );
 
       if (paymentData?.status === 'approved' && paymentData.external_reference) {
+        const externalReference = paymentData.external_reference;
+        const [userId, planType] = externalReference.split(':');
         const newEndDate = new Date();
         newEndDate.setDate(newEndDate.getDate() + 30);
-        await activateSubscription(paymentData.external_reference, newEndDate);
+        await activateSubscription(userId, newEndDate, planType || 'personal');
       }
     }
 

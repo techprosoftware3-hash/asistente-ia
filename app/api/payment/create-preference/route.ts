@@ -7,9 +7,9 @@ export async function POST(req: Request) {
   try {
     const { userEmail, userId, planType } = await req.json();
 
-    const isYearly = planType === 'yearly';
-    const unitPrice = isYearly ? 100000 : 1000;
-    const title = isYearly ? 'Suscripción Anual - AI Employees' : 'Suscripción Mensual - AI Employees';
+    const isEnterprise = planType === 'enterprise';
+    const unitPrice = isEnterprise ? 60000 : 1000;
+    const title = isEnterprise ? 'Plan Enterprise - AI Employees' : 'Plan Personal - AI Employees';
 
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || new URL(req.url).origin;
     const backUrl = `${baseUrl}/dashboard?payment=success`;
@@ -20,14 +20,14 @@ export async function POST(req: Request) {
       body: {
         reason: title,
         auto_recurring: {
-          frequency: isYearly ? 12 : 1,
+          frequency: 1,
           frequency_type: 'months',
           transaction_amount: unitPrice,
           currency_id: 'ARS',
         },
         back_url: backUrl,
         payer_email: userEmail,
-        external_reference: userId,
+        external_reference: `${userId}:${planType}`, // Guardamos userId y planType
         status: 'pending',
       },
     });

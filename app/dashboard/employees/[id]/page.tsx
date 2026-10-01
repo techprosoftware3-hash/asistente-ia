@@ -55,7 +55,7 @@ export default function EmployeeManagementPage() {
       // 1. Verificar estado de suscripción
       const { data: profile } = await supabase
         .from("profiles")
-        .select("trial_ends_at, subscription_status, subscription_end_date")
+        .select("trial_ends_at, subscription_status, subscription_end_date, subscription_plan")
         .eq("id", user.id)
         .maybeSingle();
 

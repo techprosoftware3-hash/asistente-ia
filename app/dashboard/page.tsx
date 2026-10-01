@@ -40,7 +40,7 @@ export default function DashboardPage() {
       // 1. Verificar el estado de la suscripción y obtener datos del perfil (nombre y logo)
       const { data: profile } = await supabase
         .from("profiles")
-        .select("trial_ends_at, subscription_status, subscription_end_date, company_name, company_logo")
+        .select("trial_ends_at, subscription_status, subscription_end_date, subscription_plan, company_name, company_logo")
         .eq("id", user.id)
         .maybeSingle();
 
@@ -327,7 +327,7 @@ export default function DashboardPage() {
                   <span className={`font-bold ${darkMode ? "text-white" : "text-slate-900"} text-xs`}>{isSubscriptionActive ? "Online" : "Solo Lectura"}</span>
                 </div>
               </div>
-              <p className={`text-[11px] text-right ${darkMode ? "text-slate-400" : "text-slate-500"} max-w-[120px]`}>{isSubscriptionActive ? "Supabase operativo" : "Prueba vencida"}</p>
+              <p className={`text-[11px] text-right ${darkMode ? "text-slate-400" : "text-slate-500"} max-w-[120px]`}>{isSubscriptionActive ? "BASE OK" : "Prueba vencida"}</p>
             </div>
           </div>
         </section>
