@@ -107,6 +107,32 @@ export default function Home() {
         </div>
 
       </section>
+
+      {/* Pie de página con enlaces legales */}
+      <footer className="border-t border-slate-200/80 text-center text-xs flex flex-wrap justify-center gap-x-6 gap-y-2 px-5 py-6">
+        <span className="text-slate-400">© 2026 miasistentelab.com - Todos los derechos reservados</span>
+        <span className="text-slate-300">•</span>
+        <Link
+          href="/terms"
+          className="text-slate-400 hover:underline transition-colors"
+        >
+          Términos y Condiciones
+        </Link>
+        <span className="text-slate-300">•</span>
+        <Link
+          href="/privacy"
+          className="text-slate-400 hover:underline transition-colors"
+        >
+          Política de Privacidad
+        </Link>
+        <span className="text-slate-300">•</span>
+        <a
+          href="mailto:miasistentelab@gmail.com?subject=Contacto%20%2F%20Reclamo"
+          className="text-slate-400 hover:underline transition-colors break-all"
+        >
+          Contacto y reclamos: miasistentelab@gmail.com
+        </a>
+      </footer>
     </main>
   );
 }
