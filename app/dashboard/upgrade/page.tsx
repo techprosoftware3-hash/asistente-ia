@@ -133,7 +133,7 @@ export default function UpgradePage() {
               <div className="bg-blue-50 border border-blue-200 p-4 rounded-xl text-left text-sm flex flex-col sm:flex-row gap-3 sm:justify-between sm:items-center">
                 <div>
                   <p className="font-semibold text-blue-900">Plan Mensual</p>
-                  <p className="text-blue-700">$30000 / mes (Débito automático)</p>
+                  <p className="text-blue-700">$25000 / mes (Débito automático)</p>
                 </div>
                 <button
                   onClick={() => handleCheckout('monthly')}
@@ -148,7 +148,7 @@ export default function UpgradePage() {
               <div className="bg-purple-50 border border-purple-200 p-4 rounded-xl text-left text-sm flex flex-col sm:flex-row gap-3 sm:justify-between sm:items-center">
                 <div>
                   <p className="font-semibold text-purple-900">Plan Anual</p>
-                  <p className="text-purple-700">$350000 / año (Ahorro y acceso total)</p>
+                  <p className="text-purple-700">$280000 / año (Ahorro y acceso total)</p>
                 </div>
                 <button
                   onClick={() => handleCheckout('yearly')}
