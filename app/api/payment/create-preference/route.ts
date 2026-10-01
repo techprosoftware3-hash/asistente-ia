@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     const { userEmail, userId, planType } = await req.json();
 
     const isEnterprise = planType === 'enterprise';
-    const unitPrice = isEnterprise ? 60000 : 1000;
+    const unitPrice = isEnterprise ? 60000 : 25000;
     const title = isEnterprise ? 'Plan Enterprise - miasistentelab.com' : 'Plan Personal - miasistentelab.com';
 
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || new URL(req.url).origin;
