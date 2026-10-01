@@ -133,7 +133,7 @@ export default function UpgradePage() {
               <div className="bg-blue-50 border border-blue-200 p-4 rounded-xl text-left text-sm flex flex-col sm:flex-row gap-3 sm:justify-between sm:items-center">
                 <div>
                   <p className="font-semibold text-blue-900">Plan Personal</p>
-                  <p className="text-blue-700">$1.000 / mes • Hasta 5 asistentes</p>
+                  <p className="text-blue-700">$25.000 / mes • Hasta 5 asistentes</p>
                   <p className="text-blue-600 text-xs mt-1">Ideal para emprendedores y freelancers</p>
                 </div>
                 <button
