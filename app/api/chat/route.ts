@@ -275,22 +275,58 @@ ${employeeDocsText || "No hay documentos ni fotos cargados todavía."}
             const targetName = functionArgs.target_employee_name;
             const { data: targetEmployee } = await supabase
               .from("employees")
-              .select("id, name")
+              .select("id, name, role")
               .eq("user_id", ownerId)
               .ilike("name", `%${targetName}%`)
               .single();
 
             if (targetEmployee) {
-              // Crear la tarea para el empleado objetivo
-              const newTaskRes = await supabase.from("tasks").insert({
-                employee_id: targetEmployee.id,
-                title: functionArgs.title || "Tarea delegada",
-                description: functionArgs.description || message,
-                status: "pending"
-              }).select("id").single();
+              // Consultar la memoria del compañero y conocimientos globales relacionados
+              const [targetMemoriesRes, targetGlobalMemoriesRes] = await Promise.all([
+                supabase.from("memories").select("content").eq("employee_id", targetEmployee.id).order("created_at", { ascending: false }).limit(10),
+                supabase.from("global_memories").select("title, content, category").eq("user_id", ownerId).limit(20)
+              ]);
 
-              associatedTaskId = (newTaskRes.data as { id: string } | null)?.id || null;
-              const toolMsg = `\n\n✅ **¡Tarea delegada con éxito!**\n- **Para:** ${targetEmployee.name}\n- **Título:** ${functionArgs.title}\n- **Descripción:** ${functionArgs.description}`;
+              const targetMemoriesText = (targetMemoriesRes.data ?? []).map((m) => `- ${m.content}`).join("\n");
+              const targetGlobalMemoriesText = (targetGlobalMemoriesRes.data ?? [])
+                .map((g) => `- [${g.category || 'General'}] ${g.title}: ${g.content}`)
+                .join("\n");
+
+              // Usar la IA para buscar respuesta en la memoria del compañero
+              const queryOpenRouter = getOpenRouter();
+              const queryResponse = await queryOpenRouter.chat.completions.create({
+                model: MODEL_NAME,
+                messages: [
+                  {
+                    role: "system",
+                    content: `Sos ${targetEmployee.name}, un empleado virtual con rol: ${targetEmployee.role}. 
+Memoria específica: ${targetMemoriesText || "Ninguna"}
+Conocimientos globales: ${targetGlobalMemoriesText || "Ningunos"}
+
+Responde a la pregunta del usuario basándote SOLO en tu memoria y conocimientos disponibles. 
+Si NO tienes la información específica, responde honestamente que no dispones de esos datos en tu memoria actual.`
+                  },
+                  {
+                    role: "user",
+                    content: functionArgs.description || message
+                  }
+                ],
+                max_tokens: 500,
+                temperature: 0.3
+              });
+
+              const colleagueResponse = queryResponse.choices[0]?.message?.content || "No tengo esa información en mi memoria actual.";
+
+              // Crear la tarea para el empleado objetivo (para registro)
+              await supabase.from("tasks").insert({
+                employee_id: targetEmployee.id,
+                title: functionArgs.title || "Consulta delegada",
+                description: functionArgs.description || message,
+                status: "completed"
+              });
+
+              // Responder al usuario con la información del compañero
+              const toolMsg = `\n\n🤝 **Consulté a mi compañero ${targetEmployee.name}** y me dijo:\n\n${colleagueResponse}`;
               fullAssistantMessage += toolMsg;
               controller.enqueue(encoder.encode(toolMsg));
               actionTypeDesc = "delegate_task";
