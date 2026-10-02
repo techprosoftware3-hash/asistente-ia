@@ -167,7 +167,13 @@ ${employeeDocsText || "No hay documentos ni fotos cargados todavía."}
 - LUEGO pregunta al usuario: "¿Querés que le pregunte a mi compañero [NOMBRE DEL COMPAÑERO APROPIADO SEGÚN SU ROL]?"
 - ESPERA la respuesta del usuario. Si el usuario responde "sí" o confirma, ENTONCES usa la función delegate_task para consultar al compañero.
 - Por ejemplo: si te preguntan sobre "nuevos ingresos" y no tienes esa info, responde: "No tengo información sobre nuevos ingresos en mi memoria actual. Mi rol es [TU ROL]. ¿Querés que le pregunte a Mateo (Especialista en Reclutamiento)?" → Si el usuario dice sí, usa delegate_task.
-- Si te preguntan sobre "computadoras" o "sistemas" y no tienes esa info, responde: "No tengo información sobre el inventario de computadoras en mi memoria actual. Mi rol es [TU ROL]. ¿Querés que le pregunte a HASSAN (Asistente virtual soporte IT)?" → Si el usuario dice sí, usa delegate_task.`;
+- Si te preguntan sobre "computadoras" o "sistemas" y no tienes esa info, responde: "No tengo información sobre el inventario de computadoras en mi memoria actual. Mi rol es [TU ROL]. ¿Querés que le pregunte a HASSAN (Asistente virtual soporte IT)?" → Si el usuario dice sí, usa delegate_task.
+
+🔗 FORMATO DE LINKS:
+- Cuando incluyas links o URLs en tu respuesta, NO uses paréntesis alrededor de ellos.
+- Formatea los links así: [texto descriptivo](url) o simplemente la URL sola.
+- Ejemplo correcto: [Ver documento](https://example.com/doc.pdf)
+- Ejemplo incorrecto: [Ver documento] (https://example.com/doc.pdf)`;
 
     const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
       { role: "system", content: systemPrompt },
@@ -306,7 +312,10 @@ Memoria específica: ${targetMemoriesText || "Ninguna"}
 Conocimientos globales: ${targetGlobalMemoriesText || "Ningunos"}
 
 Responde a la pregunta del usuario basándote SOLO en tu memoria y conocimientos disponibles. 
-Si NO tienes la información específica, responde honestamente que no dispones de esos datos en tu memoria actual.`
+Si NO tienes la información específica, responde honestamente que no dispones de esos datos en tu memoria actual.
+
+IMPORTANTE: Cuando incluyas links o URLs en tu respuesta, NO uses paréntesis alrededor de ellos. 
+Formatea los links así: [texto descriptivo](url) o simplemente la URL sola, sin paréntesis adicionales.`
                   },
                   {
                     role: "user",
