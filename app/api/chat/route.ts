@@ -95,12 +95,12 @@ export async function POST(request: Request) {
       previousMessagesRes
     ] = await Promise.all([
       supabase.from("profiles").select("trial_ends_at, subscription_status, subscription_end_date, company_name").eq("id", user.id).maybeSingle(),
-     supabase.from("memories").select("content").eq("employee_id", employeeId).order("created_at", { ascending: false }),
+     supabase.from("memories").select("content").eq("employee_id", employeeId).order("created_at", { ascending: false }).limit(5),
       supabase.from("employees").select("id, name, role").eq("user_id", ownerId).neq("id", employeeId),
-      supabase.from("global_memories").select("title, content, category").eq("user_id", ownerId).limit(20),
-      supabase.from("files").select("title, file_type, created_at").eq("employee_id", employeeId).order("created_at", { ascending: false }).limit(2),
-      supabase.from("employee_documents").select("title, file_url, file_type, extracted_text").eq("employee_id", employeeId),
-      supabase.from("messages").select("role, content").eq("employee_id", employeeId).order("created_at", { ascending: true }).limit(8)
+      supabase.from("global_memories").select("title, content, category").eq("user_id", ownerId).limit(10),
+      supabase.from("files").select("title, file_type, created_at").eq("employee_id", employeeId).order("created_at", { ascending: false }).limit(1),
+      supabase.from("employee_documents").select("title, file_url, file_type, extracted_text").eq("employee_id", employeeId).limit(3),
+      supabase.from("messages").select("role, content").eq("employee_id", employeeId).order("created_at", { ascending: true }).limit(5)
       
     ]);
 
@@ -231,7 +231,7 @@ ${employeeDocsText || "No hay documentos ni fotos cargados todavía."}
       messages,
       tools,
       tool_choice: "auto",
-      max_tokens: 1000,
+      max_tokens: 2000,
       stream: true,
     });
 
@@ -285,8 +285,8 @@ ${employeeDocsText || "No hay documentos ni fotos cargados todavía."}
             if (targetEmployee) {
               // Consultar la memoria del compañero y conocimientos globales relacionados
               const [targetMemoriesRes, targetGlobalMemoriesRes] = await Promise.all([
-                supabase.from("memories").select("content").eq("employee_id", targetEmployee.id).order("created_at", { ascending: false }).limit(10),
-                supabase.from("global_memories").select("title, content, category").eq("user_id", ownerId).limit(20)
+                supabase.from("memories").select("content").eq("employee_id", targetEmployee.id).order("created_at", { ascending: false }).limit(5),
+                supabase.from("global_memories").select("title, content, category").eq("user_id", ownerId).limit(10)
               ]);
 
               const targetMemoriesText = (targetMemoriesRes.data ?? []).map((m) => `- ${m.content}`).join("\n");
@@ -305,7 +305,7 @@ ${employeeDocsText || "No hay documentos ni fotos cargados todavía."}
 Memoria específica: ${targetMemoriesText || "Ninguna"}
 Conocimientos globales: ${targetGlobalMemoriesText || "Ningunos"}
 
-Responde a la pregunta del usuario basándote SOLO en tu memoria y conocimientos disponibles. 
+Responde brevemente y de forma directa a la pregunta del usuario basándote SOLO en tu memoria y conocimientos disponibles. 
 Si NO tienes la información específica, responde honestamente que no dispones de esos datos en tu memoria actual.`
                   },
                   {
@@ -313,7 +313,7 @@ Si NO tienes la información específica, responde honestamente que no dispones 
                     content: functionArgs.description || message
                   }
                 ],
-                max_tokens: 500,
+                max_tokens: 300,
                 temperature: 0.3
               });
 
