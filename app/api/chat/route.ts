@@ -172,7 +172,7 @@ ${employeeDocsText || "No hay documentos ni fotos cargados todavía."}`;
         type: "function",
         function: {
           name: "delegate_task",
-          description: "Delega explícitamente una tarea a otro colega.",
+          description: `Delega explícitamente una tarea a otro colega. Compañeros disponibles: ${(colleaguesRes.data ?? []).map(c => `${c.name} (${c.role})`).join(", ")}. Debes usar el nombre exacto del compañero.`,
           parameters: {
             type: "object",
             properties: {
