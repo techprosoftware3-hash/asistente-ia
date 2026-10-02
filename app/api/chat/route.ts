@@ -169,7 +169,12 @@ ${employeeDocsText || "No hay documentos ni fotos cargados todavía."}
 - Por ejemplo: si te preguntan sobre "nuevos ingresos" y no tienes esa info, responde: "No tengo información sobre nuevos ingresos en mi memoria actual. Mi rol es [TU ROL]. ¿Querés que le pregunte a Mateo (Especialista en Reclutamiento)?" → Si el usuario dice sí, usa delegate_task.
 - Si te preguntan sobre "computadoras" o "sistemas" y no tienes esa info, responde: "No tengo información sobre el inventario de computadoras en mi memoria actual. Mi rol es [TU ROL]. ¿Querés que le pregunte a HASSAN (Asistente virtual soporte IT)?" → Si el usuario dice sí, usa delegate_task.
 
-🔗 FORMATO DE LINKS:
+� IMPORTANTE - RESUMIR RESPUESTAS:
+- DEBES SER CONCISO Y RESUMIR TUS RESPUESTAS LO MÁS POSIBLE.
+- No copies respuestas largas tal cual, resume la información clave.
+- Sé directo y al punto. Evita explicaciones innecesarias.
+
+�🔗 FORMATO DE LINKS:
 - Cuando incluyas links o URLs en tu respuesta, NO uses paréntesis alrededor de ellos.
 - Formatea los links así: [texto descriptivo](url) o simplemente la URL sola.
 - Ejemplo correcto: [Ver documento](https://example.com/doc.pdf)
@@ -237,7 +242,7 @@ ${employeeDocsText || "No hay documentos ni fotos cargados todavía."}
       messages,
       tools,
       tool_choice: "auto",
-      max_tokens: 2000,
+      max_tokens: 1200,
       stream: true,
     });
 
@@ -314,6 +319,8 @@ Conocimientos globales: ${targetGlobalMemoriesText || "Ningunos"}
 Responde a la pregunta del usuario basándote SOLO en tu memoria y conocimientos disponibles. 
 Si NO tienes la información específica, responde honestamente que no dispones de esos datos en tu memoria actual.
 
+IMPORTANTE: DEBES RESUMIR TU RESPUESTA LO MÁS POSIBLE. Sé conciso y directo. No copies respuestas largas, resume la información clave.
+
 IMPORTANTE: Cuando incluyas links o URLs en tu respuesta, NO uses paréntesis alrededor de ellos. 
 Formatea los links así: [texto descriptivo](url) o simplemente la URL sola, sin paréntesis adicionales.`
                   },
@@ -322,7 +329,7 @@ Formatea los links así: [texto descriptivo](url) o simplemente la URL sola, sin
                     content: functionArgs.description || message
                   }
                 ],
-                max_tokens: 1000,
+                max_tokens: 500,
                 temperature: 0.3
               });
 
