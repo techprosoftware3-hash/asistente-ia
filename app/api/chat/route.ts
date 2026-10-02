@@ -129,6 +129,11 @@ export async function POST(request: Request) {
     const employeeMemoriesText = (employeeMemoriesRes.data ?? []).map((m) => `- ${m.content}`).join("\n");
     const globalMemoriesText = (globalMemoriesRes.data ?? []).map((g) => `- [${g.category || 'General'}] ${g.title}: ${g.content}`).join("\n");
     
+    // Texto de los compañeros de trabajo
+    const colleaguesText = (colleaguesRes.data ?? [])
+      .map((c) => `- ${c.name} (${c.role})`)
+      .join("\n");
+    
     // Texto de los documentos/PDFs/fotos cargadas
     const employeeDocsText = (employeeDocsRes.data ?? [])
       .map((d) => `- Archivo: "${d.title}" (${d.file_type})\n  Enlace de descarga: ${d.file_url}\n  Descripción/Contenido: ${d.extracted_text || 'Sin descripción adicional'}`)
@@ -149,6 +154,9 @@ Tu rol oficial y área de trabajo es: **${employee.role}**.
 🏢 Empresa: "${companyName}".
 🌐 Políticas: ${globalMemoriesText || "Ninguna."}
 💡 Memoria: ${employeeMemoriesText || "Ninguna."}
+
+👥 COMPAÑEROS DE TRABAJO (Puedes delegar tareas y colaborar con ellos):
+${colleaguesText || "No tienes compañeros asignados todavía."}
 
 📁 DOCUMENTOS E IMÁGENES ADJUNTOS EN TU MEMORIA (Si el usuario te pide un archivo, manual o foto, compárteme el enlace markdown correspondiente):
 ${employeeDocsText || "No hay documentos ni fotos cargados todavía."}`;
