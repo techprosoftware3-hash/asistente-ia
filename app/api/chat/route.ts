@@ -159,7 +159,13 @@ Tu rol oficial y área de trabajo es: **${employee.role}**.
 ${colleaguesText || "No tienes compañeros asignados todavía."}
 
 📁 DOCUMENTOS E IMÁGENES ADJUNTOS EN TU MEMORIA (Si el usuario te pide un archivo, manual o foto, compárteme el enlace markdown correspondiente):
-${employeeDocsText || "No hay documentos ni fotos cargados todavía."}`;
+${employeeDocsText || "No hay documentos ni fotos cargados todavía."}
+
+🤝 IMPORTANT - CUANDO DELEGAR:
+- Si el usuario te pregunta sobre información que NO tienes en tu memoria y que PODRÍA tener otro compañero según su rol, DEBES usar la función delegate_task para pedirle esa información al compañero correspondiente.
+- Por ejemplo: si te preguntan sobre "nuevos ingresos" y no tienes esa info, delega a Mateo (Especialista en Reclutamiento).
+- Si te preguntan sobre "seguridad" y no tienes esa info, delega a Ing. Fredo (Seguridad e Higiene).
+- Siempre indica claramente qué información necesitas en la descripción de la tarea delegada.`;
 
     const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
       { role: "system", content: systemPrompt },
@@ -264,7 +270,37 @@ ${employeeDocsText || "No hay documentos ni fotos cargados todavía."}`;
           const functionArgs = parsePartialJson(toolCall.function.arguments || "{}");
           toolArgumentsUsed = functionArgs;
 
-          if (functionName === "create_task") {
+          if (functionName === "delegate_task") {
+            // Buscar el empleado objetivo por nombre
+            const targetName = functionArgs.target_employee_name;
+            const { data: targetEmployee } = await supabase
+              .from("employees")
+              .select("id, name")
+              .eq("user_id", ownerId)
+              .ilike("name", `%${targetName}%`)
+              .single();
+
+            if (targetEmployee) {
+              // Crear la tarea para el empleado objetivo
+              const newTaskRes = await supabase.from("tasks").insert({
+                employee_id: targetEmployee.id,
+                title: functionArgs.title || "Tarea delegada",
+                description: functionArgs.description || message,
+                status: "pending"
+              }).select("id").single();
+
+              associatedTaskId = (newTaskRes.data as { id: string } | null)?.id || null;
+              const toolMsg = `\n\n✅ **¡Tarea delegada con éxito!**\n- **Para:** ${targetEmployee.name}\n- **Título:** ${functionArgs.title}\n- **Descripción:** ${functionArgs.description}`;
+              fullAssistantMessage += toolMsg;
+              controller.enqueue(encoder.encode(toolMsg));
+              actionTypeDesc = "delegate_task";
+            } else {
+              const toolMsg = `\n\n❌ **No se pudo delegar la tarea**\nNo encontré al compañero "${targetName}". Por favor, verifica el nombre exacto de tu compañero.`;
+              fullAssistantMessage += toolMsg;
+              controller.enqueue(encoder.encode(toolMsg));
+            }
+          }
+          else if (functionName === "create_task") {
             const newTaskRes = await supabase.from("tasks").insert({
               employee_id: employeeId,
               title: functionArgs.title || "Tarea asignada",
@@ -277,7 +313,7 @@ ${employeeDocsText || "No hay documentos ni fotos cargados todavía."}`;
             fullAssistantMessage += toolMsg;
             controller.enqueue(encoder.encode(toolMsg));
             actionTypeDesc = "create_task";
-          } 
+          }
           else if (functionName === "create_document") {
             const fileType = functionArgs.file_type || "document";
             const fileExtension = fileType === "spreadsheet" ? ".csv" : ".md";
