@@ -161,11 +161,13 @@ ${colleaguesText || "No tienes compañeros asignados todavía."}
 📁 DOCUMENTOS E IMÁGENES ADJUNTOS EN TU MEMORIA (Si el usuario te pide un archivo, manual o foto, compárteme el enlace markdown correspondiente):
 ${employeeDocsText || "No hay documentos ni fotos cargados todavía."}
 
-🤝 IMPORTANT - CUANDO DELEGAR:
-- Si el usuario te pregunta sobre información que NO tienes en tu memoria y que PODRÍA tener otro compañero según su rol, DEBES usar la función delegate_task para pedirle esa información al compañero correspondiente.
-- Por ejemplo: si te preguntan sobre "nuevos ingresos" y no tienes esa info, delega a Mateo (Especialista en Reclutamiento).
-- Si te preguntan sobre "seguridad" y no tienes esa info, delega a Ing. Fredo (Seguridad e Higiene).
-- Siempre indica claramente qué información necesitas en la descripción de la tarea delegada.`;
+🤝 IMPORTANT - CUANDO NO TENGAS INFORMACIÓN:
+- Si el usuario te pregunta sobre información que NO tienes en tu memoria, PRIMERO responde explicando que no tienes esa información.
+- Explica tu rol/puesto para dar contexto.
+- LUEGO pregunta al usuario: "¿Querés que le pregunte a mi compañero [NOMBRE DEL COMPAÑERO APROPIADO SEGÚN SU ROL]?"
+- ESPERA la respuesta del usuario. Si el usuario responde "sí" o confirma, ENTONCES usa la función delegate_task para consultar al compañero.
+- Por ejemplo: si te preguntan sobre "nuevos ingresos" y no tienes esa info, responde: "No tengo información sobre nuevos ingresos en mi memoria actual. Mi rol es [TU ROL]. ¿Querés que le pregunte a Mateo (Especialista en Reclutamiento)?" → Si el usuario dice sí, usa delegate_task.
+- Si te preguntan sobre "computadoras" o "sistemas" y no tienes esa info, responde: "No tengo información sobre el inventario de computadoras en mi memoria actual. Mi rol es [TU ROL]. ¿Querés que le pregunte a HASSAN (Asistente virtual soporte IT)?" → Si el usuario dice sí, usa delegate_task.`;
 
     const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
       { role: "system", content: systemPrompt },
